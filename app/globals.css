@@ -119,16 +119,18 @@ body {
 }
 
 /* Lock-screen variant of .field — black outline on the gradient, in the brand
-   marker stack so the placeholder and the number the customer types match the
-   rest of the lockup. Note fourHand's subset carries no lowercase and no
-   digits, so in practice this text is painted by the Permanent Marker fallback
-   behind it (see app/fonts/LICENSE.txt). */
+   brush stack so the placeholder and the number the customer types read like
+   the wordmark. RegularBrush's subset is uppercase-only and has no digits, so
+   this text is painted by the Yellowtail script behind it; keeping the
+   placeholder lowercase ("Phone number", not "Phone Number") is what keeps it
+   to one face, since a capital N is the one letter RegularBrush would claim.
+   See app/fonts/LICENSE.txt. */
 .field-lock {
   background: transparent;
   border: 2px solid #000;
   border-radius: 0;
   color: #000;
-  font-family: var(--stack-marker);
+  font-family: var(--stack-brush);
   font-size: 1rem;
   padding: 0.7rem 0.9rem;
 }

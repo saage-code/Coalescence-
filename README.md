@@ -115,14 +115,17 @@ intercepts every missing character before it can reach the marker/script faces �
 so uncovered copy rendered in Arial instead. **Don't remove that flag**, or the
 lock screen's non-sticker text quietly turns into Arial.
 
-The lock-screen form fields use the marker stack too, so the phone placeholder
-and the number the customer types match the rest of the lockup. Since `fourHand`
-carries no lowercase and no digits, that text is painted by Permanent Marker
-behind it — confirmed with Chrome's `CSS.getPlatformFontsForNode`, which reports
-"Phone number" as 1 glyph from `fourHand` (the space) and 11 from Permanent
-Marker. Lowercase is deliberate: `PHONE NUMBER` would put `O N M B R` in
-`fourHand` and leave `P H E U` on the fallback, mixing two faces inside one
-word.
+The lock-screen form fields use the brush stack, so the phone placeholder and
+the number the customer types read like the wordmark above them. `RegularBrush`
+is uppercase-only and has no digits, so that text is painted by the Yellowtail
+script behind it — confirmed with Chrome's `CSS.getPlatformFontsForNode`, which
+reports both "Phone number" and a typed "+1 555 0177" as entirely Yellowtail.
+
+**Keep the placeholder lowercase.** A capital N is the one letter in "Phone
+Number" that `RegularBrush` covers, so title-casing it renders that single
+glyph in the rough brush face and the other eleven in Yellowtail — two
+mismatched letterforms inside one word. Same trap in the other direction for
+the marker stack, where `PHONE NUMBER` would split `O N M B R` from `P H E U`.
 
 **Their licensing is unverified.** Font EULAs often allow PDF embedding while
 charging separately for webfont use, so confirm the terms for `RegularBrush`
