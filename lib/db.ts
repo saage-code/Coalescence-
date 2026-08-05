@@ -62,10 +62,14 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   lockHeadline: "BRB!",
   // Empty by default so the lock screen stays clean: logo, subtitle, button.
   lockMessage: "",
-  lockLogo: "",
+  // The brand wordmark from the sticker artwork, as outlined vector so it
+  // renders exactly at any size. Admin uploads replace it; clearing it falls
+  // back to brandName set in the brush font.
+  lockLogo: "/brand/wordmark.svg",
   lockButtonLabel: "JOIN SMS",
-  lockGradientTop: "#4ED4B8",
-  lockGradientBottom: "#2C7A9E",
+  // Sampled from the sticker's background, which is a pure vertical ramp.
+  lockGradientTop: "#4BD8B2",
+  lockGradientBottom: "#216A9F",
 };
 
 function ensureDirs() {

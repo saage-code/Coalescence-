@@ -1,3 +1,33 @@
+================================================================================
+FONTS IN THIS DIRECTORY
+================================================================================
+
+Yellowtail.woff2, PermanentMarker.woff2
+  From Google Fonts, licensed under the Apache License 2.0 (full text below).
+  Used as full-alphabet fallbacks behind the two brand fonts.
+
+RegularBrush.woff2, fourHand.woff2
+  The brand's own faces, extracted from the supplied QR sticker PDF artwork
+  and converted to WOFF2. Both are SUBSETS carrying only the characters that
+  appeared in the artwork:
+      RegularBrush  ->  A C E L N O S      (covers "COALESCENCE")
+      fourHand      ->  space ! B I J M N O R S   (covers "BRB!", "JOIN SMS")
+  Any other character has no glyph and falls through to the Apache-licensed
+  fonts above, per the fallback chain in app/globals.css.
+
+  *** LICENSING IS UNVERIFIED. *** These two files are NOT covered by the
+  Apache license below. They were embedded in a print/PDF artwork file, and
+  many foundry EULAs permit document embedding while charging separately for
+  webfont use. Confirm the terms for RegularBrush and fourHand with whoever
+  supplied the artwork before this site is served publicly. If webfont use is
+  not licensed, delete these two files and drop them from app/fonts.ts — the
+  fallback chain keeps the page working, and the wordmark in
+  public/brand/wordmark.svg is outlined vector so it is unaffected either way.
+
+================================================================================
+LICENSE BELOW APPLIES TO Yellowtail.woff2 AND PermanentMarker.woff2 ONLY
+================================================================================
+
 
                                  Apache License
                            Version 2.0, January 2004

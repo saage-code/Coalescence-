@@ -30,12 +30,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Brand fonts, used by the lock screen. */
+/* Brand fonts, used by the lock screen. The real sticker fonts come first;
+   because they're subsets (see app/fonts.ts), the browser falls back per
+   character, so anything outside the sticker's copy still lands on a
+   related script/marker face rather than on tofu. */
 .font-brush {
-  font-family: var(--font-brush), "Brush Script MT", cursive;
+  font-family: var(--font-regular-brush), var(--font-brush), "Brush Script MT", cursive;
 }
 .font-marker {
-  font-family: var(--font-marker), "Comic Sans MS", cursive;
+  font-family: var(--font-four-hand), var(--font-marker), "Comic Sans MS", cursive;
 }
 
 /* Outline button that fills on hover */
@@ -66,6 +69,29 @@ body {
 }
 .field::placeholder {
   color: var(--muted);
+}
+
+/* Lock-screen reveal button. Border and padding are in em so the box keeps
+   the sticker's proportions at any font size: the artwork sets a 6pt rule
+   around a 47.4pt label (0.127em) with 92pt / 21pt of padding. */
+.btn-lock {
+  /* LockScreen sets --lock-btn-size in cqw; the clamp is the standalone fallback. */
+  font-size: var(--lock-btn-size, clamp(1.5rem, 4vw, 2.5rem));
+  /* Every value below is em, derived from the artwork's 47.41pt label:
+     6pt rule = 0.127em, and the 368x90pt box around a 183x40pt label leaves
+     1.823em / 0.4em of padding. line-height matches the label's own cap
+     height (40/47.41) so the box hugs the glyphs the way the printed one
+     does, instead of inheriting a much taller default line box. */
+  line-height: 0.844;
+  border: 0.127em solid #000;
+  padding: 0.4em 1.823em;
+  color: #000;
+  background: transparent;
+  transition: background-color 0.2s, color 0.2s;
+}
+.btn-lock:hover {
+  background-color: #000;
+  color: #fff;
 }
 
 /* Lock-screen variant of .field — black outline on the gradient. */

@@ -63,7 +63,7 @@ export default function SignupForm({ compact = false, revealLabel, theme = "ligh
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="font-marker text-2xl sm:text-3xl tracking-wide border-2 border-black px-14 sm:px-20 py-3 transition-colors hover:bg-black hover:text-white"
+        className="btn-lock font-marker"
       >
         {revealLabel}
       </button>

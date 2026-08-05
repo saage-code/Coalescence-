@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import type { Product, SiteSettings, Signup } from "@/lib/db";
+import LockLockup from "@/components/LockLockup";
 
 type Props = {
   initialSettings: SiteSettings;
@@ -71,7 +72,14 @@ function ImagePicker({
     <div className="flex items-center gap-3">
       {value ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={value} alt="" className="w-14 h-14 rounded-lg object-cover border" style={{ borderColor: "var(--line)" }} />
+        // Wide box and object-contain so a letterform wordmark stays readable
+        // here instead of being cropped to a couple of glyphs.
+        <img
+          src={value}
+          alt=""
+          className="w-28 h-14 rounded-lg object-contain border p-1"
+          style={{ borderColor: "var(--line)" }}
+        />
       ) : (
         <div
           className="w-14 h-14 rounded-lg border border-dashed flex items-center justify-center text-lg"
@@ -340,6 +348,13 @@ export default function AdminDashboard({ initialSettings, initialProducts, initi
               <Label>Small text under the button</Label>
               <input className="field" value={settings.lockMessage} onChange={(e) => set({ lockMessage: e.target.value })} />
             </label>
+            <p className="sm:col-span-2 text-[11px] leading-relaxed" style={{ color: "var(--muted)" }}>
+              Heads up: the brand fonts from the sticker artwork only include the characters it
+              used — <strong>A C E L N O S</strong> for the wordmark and{" "}
+              <strong>B I J M N O R S !</strong> for the subtitle and button. Anything else still
+              shows up, but in the backup marker font, so mixed copy can look inconsistent. Check
+              the preview after changing these.
+            </p>
             <label>
               <Label>Background — top color</Label>
               <div className="flex items-center gap-3">
@@ -378,18 +393,16 @@ export default function AdminDashboard({ initialSettings, initialProducts, initi
                 background: `linear-gradient(180deg, ${settings.lockGradientTop} 0%, ${settings.lockGradientBottom} 100%)`,
               }}
             >
-              {settings.lockLogo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={settings.lockLogo} alt="" className="max-h-24 object-contain" />
-              ) : (
-                <span className="font-brush text-4xl sm:text-5xl leading-tight break-words max-w-full">
-                  {settings.brandName}
-                </span>
-              )}
-              {settings.lockHeadline && <span className="font-marker text-xl mt-1">{settings.lockHeadline}</span>}
-              <span className="font-marker text-base border-2 border-black px-8 py-1.5 mt-5">
-                {settings.lockButtonLabel || "JOIN SMS"}
-              </span>
+              <LockLockup
+                settings={settings}
+                heading={false}
+                className="w-[85.3%]"
+                button={
+                  <span className="btn-lock font-marker inline-block pointer-events-none">
+                    {settings.lockButtonLabel || "JOIN SMS"}
+                  </span>
+                }
+              />
             </div>
           </div>
 
