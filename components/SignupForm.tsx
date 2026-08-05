@@ -65,7 +65,7 @@ export default function SignupForm({
           You&apos;re on the list.
         </p>
         <p className="mt-2 text-sm" style={{ color: lock ? "rgba(0,0,0,0.65)" : "var(--muted)" }}>
-          We&apos;ll only reach out when something drops.
+          Stay tuned for future updates.
         </p>
       </div>
     );
