@@ -33,12 +33,17 @@ body {
 /* Brand fonts, used by the lock screen. The real sticker fonts come first;
    because they're subsets (see app/fonts.ts), the browser falls back per
    character, so anything outside the sticker's copy still lands on a
-   related script/marker face rather than on tofu. */
+   related script/marker face rather than on tofu. Kept as stacks here so the
+   lock-screen form fields can reuse them without repeating the chain. */
+:root {
+  --stack-brush: var(--font-regular-brush), var(--font-brush), "Brush Script MT", cursive;
+  --stack-marker: var(--font-four-hand), var(--font-marker), "Comic Sans MS", cursive;
+}
 .font-brush {
-  font-family: var(--font-regular-brush), var(--font-brush), "Brush Script MT", cursive;
+  font-family: var(--stack-brush);
 }
 .font-marker {
-  font-family: var(--font-four-hand), var(--font-marker), "Comic Sans MS", cursive;
+  font-family: var(--stack-marker);
 }
 
 /* Outline button that fills on hover */
@@ -113,12 +118,17 @@ body {
   padding: 0.55em 1.1em;
 }
 
-/* Lock-screen variant of .field — black outline on the gradient. */
+/* Lock-screen variant of .field — black outline on the gradient, in the brand
+   marker stack so the placeholder and the number the customer types match the
+   rest of the lockup. Note fourHand's subset carries no lowercase and no
+   digits, so in practice this text is painted by the Permanent Marker fallback
+   behind it (see app/fonts/LICENSE.txt). */
 .field-lock {
   background: transparent;
   border: 2px solid #000;
   border-radius: 0;
   color: #000;
+  font-family: var(--stack-marker);
   font-size: 1rem;
   padding: 0.7rem 0.9rem;
 }

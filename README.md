@@ -105,8 +105,24 @@ The artwork embedded the two real brand faces, and both are now self-hosted:
 the PDF only carried the characters it used, so `RegularBrush` has `ACELNOS`
 and `fourHand` has `BIJMNORS!` plus space. That covers the default copy
 exactly. Other characters fall through to the bundled Yellowtail / Permanent
-Marker, per the chain in `globals.css`, so custom copy still renders but can
+Marker, per the stacks in `globals.css`, so custom copy still renders but can
 look inconsistent; the admin panel says so next to those fields.
+
+That fall-through only works because both brand faces are declared with
+`adjustFontFallback: false`. By default `next/font` injects a metric-adjusted
+*system* face (`"fourHand Fallback"`) immediately after each font, which
+intercepts every missing character before it can reach the marker/script faces —
+so uncovered copy rendered in Arial instead. **Don't remove that flag**, or the
+lock screen's non-sticker text quietly turns into Arial.
+
+The lock-screen form fields use the marker stack too, so the phone placeholder
+and the number the customer types match the rest of the lockup. Since `fourHand`
+carries no lowercase and no digits, that text is painted by Permanent Marker
+behind it — confirmed with Chrome's `CSS.getPlatformFontsForNode`, which reports
+"Phone number" as 1 glyph from `fourHand` (the space) and 11 from Permanent
+Marker. Lowercase is deliberate: `PHONE NUMBER` would put `O N M B R` in
+`fourHand` and leave `P H E U` on the fallback, mixing two faces inside one
+word.
 
 **Their licensing is unverified.** Font EULAs often allow PDF embedding while
 charging separately for webfont use, so confirm the terms for `RegularBrush`
