@@ -338,7 +338,7 @@ export default function AdminDashboard({ initialSettings, initialProducts, initi
             </label>
             <label>
               <Label>Subtitle</Label>
-              <input className="field" value={settings.lockHeadline} onChange={(e) => set({ lockHeadline: e.target.value })} placeholder="BRB!" />
+              <input className="field" value={settings.lockHeadline} onChange={(e) => set({ lockHeadline: e.target.value })} placeholder="BRB" />
             </label>
             <label>
               <Label>Button label</Label>

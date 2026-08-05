@@ -62,7 +62,7 @@ export default function SignupForm({
     return (
       <div className="text-center">
         <p className={lock ? "font-marker text-3xl" : "font-display text-2xl tracking-wide"}>
-          You&apos;re on the list.
+          You&apos;re on the list!
         </p>
         <p className="mt-2 text-sm" style={{ color: lock ? "rgba(0,0,0,0.65)" : "var(--muted)" }}>
           Stay tuned for future updates.
