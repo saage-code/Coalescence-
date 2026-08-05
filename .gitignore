@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# Local env (set ADMIN_PASSWORD here — see .env.example)
+.env
+.env*.local
+
+# Runtime content written by the admin panel (settings, products, signups, uploads).
+# Seeded automatically with defaults on first run.
+/data/

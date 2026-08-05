@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  /* Admin-configurable accent — defaults to plain black. */
+  --color-accent: var(--accent);
+}
+
+:root {
+  --accent: #000000;
+  --bg: #ffffff;
+  --ink: #111111;
+  --muted: #6b6b6b;
+  --line: #e5e5e5;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headline font for the storefront — still the basic font. Swap this one
+   line for a display font later when the shop's look is decided. */
+.font-display {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Brand fonts, used by the lock screen. */
+.font-brush {
+  font-family: var(--font-brush), "Brush Script MT", cursive;
+}
+.font-marker {
+  font-family: var(--font-marker), "Comic Sans MS", cursive;
+}
+
+/* Outline button that fills on hover */
+.btn-ghost {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  transition: background-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover {
+  background-color: var(--ink);
+  color: var(--bg);
+}
+
+/* Shared form fields (storefront + admin) */
+.field {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field:focus {
+  border-color: var(--ink);
+}
+.field::placeholder {
+  color: var(--muted);
+}
+
+/* Lock-screen variant of .field — black outline on the gradient. */
+.field-lock {
+  background: transparent;
+  border: 2px solid #000;
+  border-radius: 0;
+  color: #000;
+  font-size: 1rem;
+  padding: 0.7rem 0.9rem;
+}
+.field-lock:focus {
+  border-color: #000;
+  background: rgba(255, 255, 255, 0.18);
+}
+.field-lock::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
