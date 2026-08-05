@@ -17,7 +17,9 @@ export default function LockScreen({ settings }: { settings: SiteSettings }) {
       <LockLockup
         settings={settings}
         className="w-[85.3vw] max-w-[56rem]"
-        button={<SignupForm theme="lock" revealLabel={settings.lockButtonLabel || "JOIN SMS"} />}
+        button={
+          <SignupForm theme="lock" smsOnly revealLabel={settings.lockButtonLabel || "JOIN SMS"} />
+        }
       />
 
       {settings.lockMessage && (

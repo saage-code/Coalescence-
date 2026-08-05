@@ -7,7 +7,8 @@ project — push it to its own repository and deploy it on its own.
 
 - **Lock screen** (`/` while locked) — the finished, branded page, rebuilt to
   match the QR sticker artwork: vertical teal gradient, brush wordmark, "BRB!",
-  and an outlined JOIN SMS button that opens the email/SMS capture form. See
+  and an outlined JOIN SMS button that opens a single SMS bar — one phone field
+  plus JOIN, in the same footprint the button occupied. See
   [Lock screen fidelity](#lock-screen-fidelity) for how it was derived.
 - **Storefront** (`/` while open) — still deliberately plain black-and-white
   (basic font, no colors) so the shop's real look can be layered on later:
@@ -16,7 +17,7 @@ project — push it to its own repository and deploy it on its own.
 - **Admin panel** (`/admin`) — password-protected. From there the owner can:
   - **Lock / unlock the store.** When locked, customers see *only* the branded
     lock screen (teal gradient, brush-script logo, "BRB!", and a JOIN SMS button
-    that opens the email/SMS form) — no products, no prices, nothing else. The
+    that opens the SMS bar) — no products, no prices, nothing else. The
     admin still sees the full site (with a banner) so they can keep working on it.
   - **Design the lock screen** — upload a logo image (or fall back to the brand
     name in the brush font), change the subtitle, the button label, the small
@@ -70,6 +71,24 @@ Where each piece came from:
   curve. `.btn-lock` in `globals.css` does the same for the button: its border
   and padding are in `em`, derived from the artwork's 6pt rule and 368x90 box.
   The admin preview renders through the same component so it can't drift.
+
+### The SMS bar
+
+The lock screen collects SMS only: `SignupForm`'s `smsOnly` prop drops the email
+field and lays the rest out as one bar, sized by `.sms-bar-form` to land in the
+JOIN button's own footprint so the lockup doesn't reflow when it opens. The
+consent line and the empty-submit message both switch to SMS-only wording to
+match. The storefront footer still takes email **or** phone, and the API is
+unchanged — a phone on its own has always been a valid signup.
+
+Its two sizes deliberately stop shrinking, unlike the display type above: an
+input has a legibility floor, so the text never drops below 1rem (under 16px
+mobile Safari zooms the page on focus) and the bar goes full-width, stacking
+JOIN underneath, once the button footprint would squeeze it. Measured: 30.5px
+inline at 1440, 22.3px inline at 768, 16px stacked at 390 and 320.
+
+To go back to collecting email as well, drop the `smsOnly` prop in
+`components/LockScreen.tsx`; everything else is driven off it.
 
 Two deliberate departures from the artwork:
 

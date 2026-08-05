@@ -33,6 +33,14 @@ export default function LockLockup({
           containerType: "inline-size",
           // Read by .btn-lock so the button tracks the lockup too.
           "--lock-btn-size": "9.08cqw",
+          // Read by .sms-bar-form. Unlike the display type above, an input has
+          // a legibility floor, so both values stop shrinking: the bar takes
+          // the button's footprint (368/522 of the lockup) while that is roomy
+          // enough and goes full-width below it, and the text never drops under
+          // 1rem — under 16px iOS zooms the page on focus.
+          "--lock-bar-width": "max(70.5cqw, min(100cqw, 22rem))",
+          "--lock-bar-max": "none",
+          "--lock-bar-size": "max(1rem, 3.4cqw)",
         } as React.CSSProperties
       }
     >

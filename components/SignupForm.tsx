@@ -9,10 +9,17 @@ type Props = {
   revealLabel?: string;
   /** "lock" = black-on-gradient marker styling for the lock screen. */
   theme?: "light" | "lock";
+  /** Drop the email field and collect SMS only, as a single inline bar. */
+  smsOnly?: boolean;
 };
 
 // Email + SMS capture used on the lock screen and in the storefront footer.
-export default function SignupForm({ compact = false, revealLabel, theme = "light" }: Props) {
+export default function SignupForm({
+  compact = false,
+  revealLabel,
+  theme = "light",
+  smsOnly = false,
+}: Props) {
   const [open, setOpen] = useState(!revealLabel);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -24,6 +31,13 @@ export default function SignupForm({ compact = false, revealLabel, theme = "ligh
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (state === "busy") return;
+    // With no email field on screen, the API's "email or phone" wording would
+    // be confusing, so ask for the one field there actually is.
+    if (smsOnly && !phone.trim()) {
+      setMessage("Enter a phone number.");
+      setState("error");
+      return;
+    }
     setState("busy");
     try {
       const res = await fetch("/api/signup", {
@@ -71,24 +85,31 @@ export default function SignupForm({ compact = false, revealLabel, theme = "ligh
   }
 
   return (
-    <form onSubmit={submit} className="w-full max-w-md mx-auto">
-      <div className={compact ? "flex flex-col sm:flex-row gap-3" : "flex flex-col gap-3"}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email address"
-          className={lock ? "field field-lock" : "field"}
-          autoComplete="email"
-          autoFocus={Boolean(revealLabel)}
-        />
+    <form onSubmit={submit} className={smsOnly ? "sms-bar-form" : "w-full max-w-md mx-auto"}>
+      <div
+        className={
+          smsOnly || compact ? "flex flex-col sm:flex-row gap-3" : "flex flex-col gap-3"
+        }
+      >
+        {!smsOnly && (
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email address"
+            className={lock ? "field field-lock" : "field"}
+            autoComplete="email"
+            autoFocus={Boolean(revealLabel)}
+          />
+        )}
         <input
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder="Phone number (for SMS)"
-          className={lock ? "field field-lock" : "field"}
+          placeholder={smsOnly ? "Phone number" : "Phone number (for SMS)"}
+          className={`${lock ? "field field-lock" : "field"}${smsOnly ? " flex-1 min-w-0" : ""}`}
           autoComplete="tel"
+          autoFocus={Boolean(revealLabel) && smsOnly}
         />
         <button
           type="submit"
@@ -114,9 +135,18 @@ export default function SignupForm({ compact = false, revealLabel, theme = "ligh
         className="mt-3 text-[11px] leading-relaxed text-center"
         style={{ color: lock ? "rgba(0,0,0,0.6)" : "var(--muted)" }}
       >
-        Enter an email, a phone number, or both. By signing up you agree to receive
-        occasional drop announcements by email or SMS. Msg &amp; data rates may apply.
-        Unsubscribe anytime.
+        {smsOnly ? (
+          <>
+            By signing up you agree to receive occasional drop announcements by SMS. Msg &amp;
+            data rates may apply. Unsubscribe anytime.
+          </>
+        ) : (
+          <>
+            Enter an email, a phone number, or both. By signing up you agree to receive
+            occasional drop announcements by email or SMS. Msg &amp; data rates may apply.
+            Unsubscribe anytime.
+          </>
+        )}
       </p>
     </form>
   );

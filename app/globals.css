@@ -94,6 +94,25 @@ body {
   color: #fff;
 }
 
+/* SMS-only bar: sits in exactly the footprint the JOIN button occupied, so the
+   lockup doesn't reflow when the form opens. LockLockup supplies the cqw
+   values; the rem fallback covers use outside that container. */
+.sms-bar-form {
+  width: var(--lock-bar-width, 100%);
+  max-width: var(--lock-bar-max, 28rem);
+  margin-inline: auto;
+  font-size: var(--lock-bar-size, 1rem);
+}
+.sms-bar-form .field-lock {
+  font-size: 1em;
+}
+/* Keep JOIN on the bar's scale instead of a fixed size, so the two halves of
+   the bar stay in proportion at any width. */
+.sms-bar-form button[type="submit"] {
+  font-size: 1em;
+  padding: 0.55em 1.1em;
+}
+
 /* Lock-screen variant of .field — black outline on the gradient. */
 .field-lock {
   background: transparent;
