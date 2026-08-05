@@ -70,7 +70,12 @@ Where each piece came from:
   artwork's relationship at any viewport instead of each scaling on its own
   curve. `.btn-lock` in `globals.css` does the same for the button: its border
   and padding are in `em`, derived from the artwork's 6pt rule and 368x90 box.
-  The admin preview renders through the same component so it can't drift.
+  Its vertical padding is deliberately uneven (`0.518em` top, `0.282em`
+  bottom) — `fourHand` reserves descender space below a label that has none, so
+  even padding left the label sitting at 15.6% from the box top where the print
+  has it at 21.8%. The bias lands it on the printed position without changing
+  the box height. The admin preview renders through the same component so it
+  can't drift.
 
 ### The SMS bar
 

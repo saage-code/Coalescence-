@@ -89,7 +89,13 @@ body {
      does, instead of inheriting a much taller default line box. */
   line-height: 0.844;
   border: 0.127em solid #000;
-  padding: 0.4em 1.823em;
+  /* Vertical padding is biased down rather than even. fourHand reserves
+     descender space below a label that has no descenders, so an even 0.4em/
+     0.4em left the ink 15.6% from the box top where the artwork puts it at
+     21.8%. Shifting 0.118em from the bottom to the top lands it on the
+     printed position and keeps the 0.8em total, so the box height is
+     unchanged. */
+  padding: 0.518em 1.823em 0.282em;
   color: #000;
   background: transparent;
   transition: background-color 0.2s, color 0.2s;
@@ -112,10 +118,17 @@ body {
   font-size: 1em;
 }
 /* Keep JOIN on the bar's scale instead of a fixed size, so the two halves of
-   the bar stay in proportion at any width. */
+   the bar stay in proportion at any width. Flex centring plus padding biased
+   down by 0.246em drops the label onto its optical centre: the same reserved
+   descender space that lifts the reveal button's label was leaving this one
+   sitting high in the black box. Total vertical padding still 1.1em, so the
+   button's height doesn't change. */
 .sms-bar-form button[type="submit"] {
   font-size: 1em;
-  padding: 0.55em 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.796em 1.1em 0.304em;
 }
 
 /* Lock-screen variant of .field — black outline on the gradient, in the brand
