@@ -102,11 +102,14 @@ export default function SignupForm({
             autoFocus={Boolean(revealLabel)}
           />
         )}
+        {/* Placeholder is short on purpose: in the script face "(for SMS)"
+            overflowed the compact two-column row, and the consent line below
+            already says signups go out by email or SMS. */}
         <input
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          placeholder={smsOnly ? "Phone number" : "Phone number (for SMS)"}
+          placeholder="Phone number"
           className={`${lock ? "field field-lock" : "field"}${smsOnly ? " flex-1 min-w-0" : ""}`}
           autoComplete="tel"
           autoFocus={Boolean(revealLabel) && smsOnly}

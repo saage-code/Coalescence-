@@ -13,7 +13,12 @@ project — push it to its own repository and deploy it on its own.
 - **Storefront** (`/` while open) — still deliberately plain black-and-white
   (basic font, no colors) so the shop's real look can be layered on later:
   announcement bar, big hero, product grid, about section, and an email/SMS
-  signup in the footer.
+  signup in the footer. Cards link through to the product page.
+- **Product page** (`/products/<id>`) — a Shopify-shaped page carrying the lock
+  screen's branding: gradient announcement bar, wordmark header, breadcrumb,
+  photo gallery with thumbnails, script-set title, price and was-price, size
+  chips, quantity stepper, collapsible details, related products, and a signup
+  band in the brand gradient. See [The product page](#the-product-page).
 - **Admin panel** (`/admin`) — password-protected. From there the owner can:
   - **Lock / unlock the store.** When locked, customers see *only* the branded
     lock screen (teal gradient, brush-script logo, "BRB", and a JOIN SMS button
@@ -46,6 +51,53 @@ npm run dev
 - Admin: http://localhost:3000/admin — password is whatever `ADMIN_PASSWORD` is
   set to (falls back to `admin` for local preview; the admin panel shows a
   warning until you change it).
+
+## The product page
+
+`/products/<id>` — `app/products/[id]/page.tsx` for the shell,
+`components/ProductDetail.tsx` for the interactive half (gallery, sizes,
+quantity, call to action).
+
+**There is still no cart or checkout**, deliberately, as everywhere else in this
+project. The page is Shopify-*shaped*, not Shopify-backed, and the primary
+button reflects that rather than faking an "Add to cart":
+
+| Product state | Button | Where it goes |
+| --- | --- | --- |
+| Has a buy link | `Buy now` | the buy link, with `?size=` and `?qty=` appended |
+| Has sizes, none picked | `Select a size` | disabled until one is chosen |
+| No buy link | `Ask about this piece` | `mailto:` the contact email with the piece and size prefilled, else Instagram |
+| Sold out | `Sold out` (disabled) | plus `Tell me when it's back`, jumping to the signup band |
+
+Query params are only appended when the buy link parses as an absolute URL, so a
+DM link or relative path is passed through untouched. Stripe and PayPal ignore
+params they don't know.
+
+**Theme.** Photos need a neutral surround, so the brand gradient is used as
+banding and accents — the announcement bar, the signup band, and the fill on
+primary buttons — rather than as the page background. Both stops come from the
+lock screen's own `lockGradientTop` / `lockGradientBottom`, exposed site-wide as
+`--brand-top` / `--brand-bottom` in `app/layout.tsx`, so changing the lock
+screen's colours in the admin panel moves the storefront with it.
+
+**Fonts: use `.font-script` / `.font-hand` here, not `.font-brush` /
+`.font-marker`.** The product page renders whatever the admin typed, and the two
+real brand faces are subsets — on arbitrary copy they claim the odd letter
+(an uppercase `S` from `RegularBrush`, an `M` from `fourHand`) and leave the rest
+to the face behind, splitting a single word across two letterforms. The
+`script`/`hand` stacks drop the subset faces so text always renders in one face.
+They're the Apache-licensed Google fonts too, so nothing on this page depends on
+the unverified brand-font licensing.
+
+**Product fields.** `Product` in `lib/db.ts` gained `description`, `sizes`
+(comma-separated), `gallery` (up to 8 extra photos), and `compareAtPrice`; all
+four are editable in the admin panel. Every read goes through `normalizeProduct`,
+so a `data/products.json` written before these fields existed still renders
+instead of showing `undefined`.
+
+While the store is locked, product URLs 404 for customers — a direct link must
+not be a way around the lock screen — while the admin can still open them to
+build the shop out before opening.
 
 ## Lock screen fidelity
 

@@ -124,11 +124,118 @@ function ImagePicker({
   );
 }
 
+const MAX_GALLERY = 8;
+
+// Extra product-page photos. Same upload endpoint as ImagePicker, but appends to
+// a list and lets each shot be reordered or removed.
+function GalleryPicker({
+  value,
+  onChange,
+  onError,
+}: {
+  value: string[];
+  onChange: (urls: string[]) => void;
+  onError: (message: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function add(files: FileList) {
+    setBusy(true);
+    try {
+      const room = MAX_GALLERY - value.length;
+      const picked = Array.from(files).slice(0, Math.max(0, room));
+      const urls: string[] = [];
+      for (const file of picked) {
+        const form = new FormData();
+        form.append("file", file);
+        const data = await api<{ url: string }>("/api/admin/upload", { method: "POST", body: form });
+        urls.push(data.url);
+      }
+      if (urls.length) onChange([...value, ...urls]);
+      if (files.length > picked.length) onError(`Gallery holds ${MAX_GALLERY} photos — the rest were skipped.`);
+    } catch (e) {
+      onError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function move(from: number, to: number) {
+    if (to < 0 || to >= value.length) return;
+    const next = [...value];
+    [next[from], next[to]] = [next[to], next[from]];
+    onChange(next);
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      {value.length > 0 && (
+        <div className="flex flex-wrap gap-3">
+          {value.map((src, i) => (
+            <div key={src} className="flex flex-col gap-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt=""
+                className="w-20 h-20 rounded-lg object-cover border"
+                style={{ borderColor: "var(--line)" }}
+              />
+              <div className="flex items-center justify-center gap-1 text-xs" style={{ color: "var(--muted)" }}>
+                <button type="button" onClick={() => move(i, i - 1)} disabled={i === 0} className="px-1 disabled:opacity-20" title="Move left">
+                  ←
+                </button>
+                <button type="button" onClick={() => move(i, i + 1)} disabled={i === value.length - 1} className="px-1 disabled:opacity-20" title="Move right">
+                  →
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChange(value.filter((_, j) => j !== i))}
+                  className="px-1 hover:text-red-600"
+                  title="Remove"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div>
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={busy || value.length >= MAX_GALLERY}
+          className="border rounded-lg px-4 py-2 text-xs tracking-wider uppercase hover:border-accent transition-colors disabled:opacity-50"
+          style={{ borderColor: "var(--line)" }}
+        >
+          {busy ? "Uploading…" : value.length >= MAX_GALLERY ? `Gallery full (${MAX_GALLERY})` : "Add photos"}
+        </button>
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        accept="image/jpeg,image/png,image/webp,image/gif,image/avif"
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files?.length) add(e.target.files);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
 const EMPTY_PRODUCT: Omit<Product, "id"> = {
   name: "",
   price: "",
+  compareAtPrice: "",
   image: "",
+  gallery: [],
   tag: "",
+  description: "",
+  sizes: "",
   buyUrl: "",
   soldOut: false,
 };
@@ -162,17 +269,39 @@ function ProductForm({
           <input className="field" value={draft.price} onChange={(e) => set({ price: e.target.value })} placeholder="$45" />
         </label>
         <label>
+          <Label>Was-price (optional — shown struck through)</Label>
+          <input className="field" value={draft.compareAtPrice} onChange={(e) => set({ compareAtPrice: e.target.value })} placeholder="$60" />
+        </label>
+        <label>
           <Label>Badge (optional)</Label>
           <input className="field" value={draft.tag} onChange={(e) => set({ tag: e.target.value })} placeholder="New / 1 of 50 / Last one" />
         </label>
         <label>
+          <Label>Sizes (optional — comma separated)</Label>
+          <input className="field" value={draft.sizes} onChange={(e) => set({ sizes: e.target.value })} placeholder="S, M, L, XL" />
+        </label>
+        <label className="sm:col-span-2">
           <Label>Buy link (optional)</Label>
           <input className="field" value={draft.buyUrl} onChange={(e) => set({ buyUrl: e.target.value })} placeholder="Stripe / PayPal / DM link" />
         </label>
       </div>
+      <label>
+        <Label>Description (optional — shown on the product page)</Label>
+        <textarea
+          className="field"
+          rows={4}
+          value={draft.description}
+          onChange={(e) => set({ description: e.target.value })}
+          placeholder={"Heavyweight 320gsm cotton, boxy fit.\n\nLeave a blank line to start a new paragraph."}
+        />
+      </label>
       <div>
-        <Label>Photo</Label>
+        <Label>Main photo</Label>
         <ImagePicker value={draft.image} onChange={(image) => set({ image })} onError={onError} />
+      </div>
+      <div>
+        <Label>More photos (optional — product page gallery, up to 8)</Label>
+        <GalleryPicker value={draft.gallery} onChange={(gallery) => set({ gallery })} onError={onError} />
       </div>
       <label className="flex items-center gap-2 text-sm cursor-pointer">
         <input type="checkbox" checked={draft.soldOut} onChange={(e) => set({ soldOut: e.target.checked })} className="accent-[var(--accent)]" />

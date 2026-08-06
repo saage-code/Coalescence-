@@ -20,7 +20,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body
         className="min-h-screen"
-        style={{ "--accent": settings.accentColor } as React.CSSProperties}
+        style={
+          {
+            "--accent": settings.accentColor,
+            // The lock screen's two gradient stops, exposed site-wide so the
+            // storefront and product pages stay in step with it when the admin
+            // changes them.
+            "--brand-top": settings.lockGradientTop,
+            "--brand-bottom": settings.lockGradientBottom,
+          } as React.CSSProperties
+        }
       >
         {children}
       </body>

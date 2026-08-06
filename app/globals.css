@@ -38,12 +38,28 @@ body {
 :root {
   --stack-brush: var(--font-regular-brush), var(--font-brush), "Brush Script MT", cursive;
   --stack-marker: var(--font-four-hand), var(--font-marker), "Comic Sans MS", cursive;
+  /* Full-alphabet stacks that deliberately EXCLUDE the two subset brand faces.
+     Use these for anything the admin types — product names, descriptions, size
+     labels. The subset faces cover only the sticker's characters, so on
+     arbitrary copy they claim a letter or two mid-word (an uppercase S from
+     RegularBrush, an M from fourHand) and leave the rest to the face behind,
+     splitting one word across two letterforms. These always render in a single
+     face, and being the Apache-licensed Google fonts, nothing built on them
+     depends on the unverified brand-font licensing. */
+  --stack-script: var(--font-brush), "Brush Script MT", cursive;
+  --stack-hand: var(--font-marker), "Comic Sans MS", cursive;
 }
 .font-brush {
   font-family: var(--stack-brush);
 }
 .font-marker {
   font-family: var(--stack-marker);
+}
+.font-script {
+  font-family: var(--stack-script);
+}
+.font-hand {
+  font-family: var(--stack-hand);
 }
 
 /* Outline button that fills on hover */
@@ -153,4 +169,124 @@ body {
 }
 .field-lock::placeholder {
   color: rgba(0, 0, 0, 0.5);
+}
+
+/* ---------------------------------------------------------------------------
+   Product page. Photos need a neutral surround, so the brand gradient is used
+   as banding and accents rather than as the page background: full-bleed on the
+   announcement bar and signup band, and as the fill on primary buttons.
+   --------------------------------------------------------------------------- */
+
+.brand-gradient {
+  background: linear-gradient(180deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
+}
+.brand-gradient-x {
+  background: linear-gradient(90deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
+}
+
+/* Primary call to action: gradient fill, ink text, squared off like the
+   sticker's button. */
+.btn-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 2px solid #000;
+  background: linear-gradient(90deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
+  color: #000;
+  padding: 0.9rem 1.25rem;
+  letter-spacing: 0.06em;
+  transition: filter 0.2s, transform 0.05s;
+}
+.btn-brand:hover {
+  filter: brightness(1.06);
+}
+.btn-brand:active {
+  transform: translateY(1px);
+}
+.btn-brand:disabled {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.25);
+  color: rgba(0, 0, 0, 0.4);
+  cursor: not-allowed;
+  filter: none;
+}
+
+/* Secondary CTA — outline, fills with ink on hover. */
+.btn-ink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: 2px solid #000;
+  background: transparent;
+  color: #000;
+  padding: 0.9rem 1.25rem;
+  letter-spacing: 0.06em;
+  transition: background-color 0.2s, color 0.2s;
+}
+.btn-ink:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* Size / option chips */
+.chip {
+  min-width: 3.25rem;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+.chip:hover:not(:disabled) {
+  border-color: #000;
+}
+.chip[aria-pressed="true"] {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+.chip:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Gallery thumbnail */
+.thumb {
+  border: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+.thumb[aria-pressed="true"] {
+  border-color: #000;
+}
+
+/* Collapsible details rows */
+.acc-row {
+  border-top: 1px solid var(--line);
+}
+.acc-row summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.acc-row summary::-webkit-details-marker {
+  display: none;
+}
+.acc-row summary::after {
+  content: "+";
+  font-size: 1.1rem;
+  letter-spacing: 0;
+}
+.acc-row[open] summary::after {
+  content: "–";
 }

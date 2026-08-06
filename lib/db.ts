@@ -33,8 +33,16 @@ export type Product = {
   id: string;
   name: string;
   price: string;
+  /** Was-price, shown struck through next to price when set. */
+  compareAtPrice: string;
   image: string;
+  /** Extra photos for the product page gallery; `image` stays the lead shot. */
+  gallery: string[];
   tag: string;
+  /** Long copy for the product page. Blank lines separate paragraphs. */
+  description: string;
+  /** Comma-separated, e.g. "S, M, L, XL". Empty means one-size / no picker. */
+  sizes: string;
   buyUrl: string;
   soldOut: boolean;
 };
@@ -108,8 +116,44 @@ export function saveSettings(patch: Partial<SiteSettings>): SiteSettings {
   return next;
 }
 
+// Products saved before the product-page fields existed are missing them, so
+// every read is normalised rather than trusted. Keeps older data/products.json
+// files working instead of rendering `undefined`.
+function normalizeProduct(raw: Partial<Product>): Product {
+  return {
+    id: typeof raw.id === "string" && raw.id ? raw.id : newId(),
+    name: raw.name ?? "",
+    price: raw.price ?? "",
+    compareAtPrice: raw.compareAtPrice ?? "",
+    image: raw.image ?? "",
+    gallery: Array.isArray(raw.gallery) ? raw.gallery.filter((s) => typeof s === "string") : [],
+    tag: raw.tag ?? "",
+    description: raw.description ?? "",
+    sizes: raw.sizes ?? "",
+    buyUrl: raw.buyUrl ?? "",
+    soldOut: Boolean(raw.soldOut),
+  };
+}
+
 export function getProducts(): Product[] {
-  return readJson<Product[]>("products.json", []);
+  return readJson<Partial<Product>[]>("products.json", []).map(normalizeProduct);
+}
+
+export function getProduct(id: string): Product | undefined {
+  return getProducts().find((p) => p.id === id);
+}
+
+/** "S, M , L" -> ["S","M","L"]. Empty string means the product has no sizes. */
+export function parseSizes(sizes: string): string[] {
+  return sizes
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/** Lead image plus gallery, de-duplicated, for the product page thumbnails. */
+export function productImages(product: Product): string[] {
+  return [product.image, ...product.gallery].filter((src, i, all) => src && all.indexOf(src) === i);
 }
 
 export function saveProducts(products: Product[]) {

@@ -143,12 +143,12 @@ export default async function Home() {
                     </div>
                   </article>
                 );
-                return p.buyUrl && !p.soldOut ? (
-                  <a key={p.id} href={p.buyUrl} target="_blank" rel="noreferrer">
+                // Cards open the product page, which is where the buy link now
+                // lives, alongside sizes, gallery and description.
+                return (
+                  <Link key={p.id} href={`/products/${p.id}`} className="block">
                     {card}
-                  </a>
-                ) : (
-                  card
+                  </Link>
                 );
               })}
             </div>

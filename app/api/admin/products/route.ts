@@ -2,15 +2,28 @@ import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
 import { getProducts, newId, saveProducts, type Product } from "@/lib/db";
 
+const MAX_GALLERY = 8;
+
 function sanitize(input: Record<string, unknown>, existing?: Product): Product {
   const str = (key: keyof Product, max = 300) =>
     typeof input[key] === "string" ? (input[key] as string).trim().slice(0, max) : existing?.[key] ?? "";
+  const gallery = Array.isArray(input.gallery)
+    ? input.gallery
+        .filter((s): s is string => typeof s === "string")
+        .map((s) => s.trim().slice(0, 500))
+        .filter(Boolean)
+        .slice(0, MAX_GALLERY)
+    : existing?.gallery ?? [];
   return {
     id: existing?.id ?? newId(),
     name: str("name") as string,
     price: str("price", 50) as string,
+    compareAtPrice: str("compareAtPrice", 50) as string,
     image: str("image", 500) as string,
+    gallery,
     tag: str("tag", 40) as string,
+    description: str("description", 4000) as string,
+    sizes: str("sizes", 200) as string,
     buyUrl: str("buyUrl", 500) as string,
     soldOut: "soldOut" in input ? Boolean(input.soldOut) : existing?.soldOut ?? false,
   };
