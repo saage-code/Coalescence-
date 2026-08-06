@@ -65,7 +65,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   tagline: "Limited drops. No restocks.",
   announcement: "DROP 001 — COMING SOON",
   accentColor: "#000000",
-  heroHeadline: "Wear it once,\nremember it forever.",
+  heroHeadline: "Style your universe",
   heroImage: "",
   about:
     "Independent clothing label. Every piece is cut, printed and numbered in small runs — when a drop sells out, it's gone.",
