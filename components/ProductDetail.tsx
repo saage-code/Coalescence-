@@ -46,10 +46,7 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
     <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
       {/* Gallery */}
       <div className="flex flex-col gap-4">
-        <div
-          className="relative aspect-[4/5] overflow-hidden"
-          style={{ background: "rgba(0,0,0,0.04)" }}
-        >
+        <div className="photo-surface relative aspect-[4/5] overflow-hidden">
           {lead ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={lead} alt={product.name} className="w-full h-full object-cover" />
@@ -60,13 +57,13 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
           )}
 
           {product.tag && !product.soldOut && (
-            <span className="font-hand absolute top-4 left-4 bg-black text-white text-xs tracking-[0.2em] uppercase px-3 py-1.5">
+            <span className="badge-ink font-hand absolute top-4 left-4 text-xs tracking-[0.2em] uppercase px-3 py-1.5">
               {product.tag}
             </span>
           )}
           {product.soldOut && (
-            <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-              <span className="font-hand border-2 border-black px-5 py-2 text-sm tracking-[0.3em] uppercase">
+            <div className="soldout-veil absolute inset-0 flex items-center justify-center">
+              <span className="font-hand border-2 px-5 py-2 text-sm tracking-[0.3em] uppercase" style={{ borderColor: "var(--ink)" }}>
                 Sold out
               </span>
             </div>
@@ -108,7 +105,7 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
         </div>
 
         {product.description && (
-          <div className="mt-6 flex flex-col gap-3 text-sm leading-relaxed" style={{ color: "var(--ink)" }}>
+          <div className="mt-6 flex flex-col gap-3 text-sm leading-relaxed">
             {product.description.split(/\n\s*\n/).map((para, i) => (
               <p key={i} className="whitespace-pre-line">
                 {para}
@@ -147,7 +144,7 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
             <span className="block text-[11px] tracking-[0.25em] uppercase" style={{ color: "var(--muted)" }}>
               Quantity
             </span>
-            <div className="mt-3 inline-flex items-center border-2 border-black">
+            <div className="qty-box mt-3 inline-flex items-center">
               <button
                 type="button"
                 onClick={() => setQty((q) => Math.max(1, q - 1))}

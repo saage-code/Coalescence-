@@ -23,6 +23,11 @@ export async function PUT(req: Request) {
     if (!(key in body)) continue;
     if (key === "locked") {
       patch.locked = Boolean(body.locked);
+    } else if (key === "productTheme") {
+      // Union, not free text — anything else is ignored rather than stored.
+      if (body.productTheme === "light" || body.productTheme === "dark") {
+        patch.productTheme = body.productTheme;
+      }
     } else if (typeof body[key] === "string") {
       (patch as Record<string, string>)[key] = (body[key] as string).slice(0, 2000);
     }

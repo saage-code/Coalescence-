@@ -27,6 +27,8 @@ export type SiteSettings = {
   lockButtonLabel: string;
   lockGradientTop: string;
   lockGradientBottom: string;
+  /** Surface the product page renders on. */
+  productTheme: "light" | "dark";
 };
 
 export type Product = {
@@ -54,6 +56,11 @@ export type Signup = {
   createdAt: string;
 };
 
+/** The wordmark shipped as the default lockLogo, and its light counterpart.
+    Declared above DEFAULT_SETTINGS because that object references it. */
+export const DEFAULT_LOCK_LOGO = "/brand/wordmark.svg";
+const DEFAULT_LOCK_LOGO_LIGHT = "/brand/wordmark-light.svg";
+
 export const DEFAULT_SETTINGS: SiteSettings = {
   brandName: "COALESCENCE",
   tagline: "Limited drops. No restocks.",
@@ -74,11 +81,12 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   // The brand wordmark from the sticker artwork, as outlined vector so it
   // renders exactly at any size. Admin uploads replace it; clearing it falls
   // back to brandName set in the brush font.
-  lockLogo: "/brand/wordmark.svg",
+  lockLogo: DEFAULT_LOCK_LOGO,
   lockButtonLabel: "JOIN SMS",
   // Sampled from the sticker's background, which is a pure vertical ramp.
   lockGradientTop: "#4BD8B2",
   lockGradientBottom: "#216A9F",
+  productTheme: "dark",
 };
 
 function ensureDirs() {
@@ -107,7 +115,13 @@ export function newId(): string {
 }
 
 export function getSettings(): SiteSettings {
-  return { ...DEFAULT_SETTINGS, ...readJson<Partial<SiteSettings>>("site.json", {}) };
+  const merged = { ...DEFAULT_SETTINGS, ...readJson<Partial<SiteSettings>>("site.json", {}) };
+  // Guard the union so a hand-edited site.json can't put an arbitrary string
+  // into a field the CSS switches on.
+  if (merged.productTheme !== "light" && merged.productTheme !== "dark") {
+    merged.productTheme = DEFAULT_SETTINGS.productTheme;
+  }
+  return merged;
 }
 
 export function saveSettings(patch: Partial<SiteSettings>): SiteSettings {
@@ -149,6 +163,19 @@ export function parseSizes(sizes: string): string[] {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+/**
+ * The bundled wordmark is an `<img>`, so it can't inherit currentColor — its
+ * fill is baked in, and the black one disappears on a dark surface. Swap in the
+ * white copy there. An admin-uploaded logo is left alone, since its colours are
+ * unknown; a dark custom logo needs a light version of its own.
+ */
+export function logoFor(settings: SiteSettings, surface: "light" | "dark"): string {
+  if (surface === "dark" && settings.lockLogo === DEFAULT_LOCK_LOGO) {
+    return DEFAULT_LOCK_LOGO_LIGHT;
+  }
+  return settings.lockLogo;
 }
 
 /** Lead image plus gallery, de-duplicated, for the product page thumbnails. */

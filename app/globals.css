@@ -175,7 +175,45 @@ body {
    Product page. Photos need a neutral surround, so the brand gradient is used
    as banding and accents rather than as the page background: full-bleed on the
    announcement bar and signup band, and as the fill on primary buttons.
+
+   Everything below reads its colours from variables so the same markup works on
+   either surface. The light values live in :root; .theme-dark swaps them on the
+   page wrapper, which the product page sets from the productTheme setting.
    --------------------------------------------------------------------------- */
+
+:root {
+  --photo-bg: rgba(0, 0, 0, 0.04);
+  --chip-border: rgba(0, 0, 0, 0.25);
+  --veil: rgba(255, 255, 255, 0.7);
+  --disabled-bg: rgba(0, 0, 0, 0.06);
+  --disabled-border: rgba(0, 0, 0, 0.25);
+  /* Deliberately stronger than a typical disabled grey: the disabled CTA label
+     is "Select a size", which is instruction the customer has to read to get
+     past it, not decoration. At 0.4 it measured ~2.5:1 here and ~3.7:1 on dark. */
+  --disabled-ink: rgba(0, 0, 0, 0.6);
+}
+
+.theme-dark {
+  --bg: #0d0d10;
+  --ink: #f4f4f2;
+  --muted: #9a9a99;
+  --line: rgba(255, 255, 255, 0.16);
+  /* The admin accent defaults to black, which is invisible here, so on dark the
+     brand's top gradient stop becomes the highlight colour instead. */
+  --accent: var(--brand-top);
+  --photo-bg: rgba(255, 255, 255, 0.06);
+  --chip-border: rgba(255, 255, 255, 0.3);
+  --veil: rgba(0, 0, 0, 0.66);
+  --disabled-bg: rgba(255, 255, 255, 0.08);
+  --disabled-border: rgba(255, 255, 255, 0.25);
+  --disabled-ink: rgba(255, 255, 255, 0.6);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.photo-surface {
+  background: var(--photo-bg);
+}
 
 .brand-gradient {
   background: linear-gradient(180deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
@@ -186,12 +224,15 @@ body {
 
 /* Primary call to action: gradient fill, ink text, squared off like the
    sticker's button. */
+/* Primary CTA. The fill is always the brand gradient, which is mid-toned on
+   either surface, so its label stays ink-black in both themes; the rule around
+   it follows the theme. */
 .btn-brand {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  border: 2px solid #000;
+  border: 2px solid var(--ink);
   background: linear-gradient(90deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
   color: #000;
   padding: 0.9rem 1.25rem;
@@ -205,9 +246,9 @@ body {
   transform: translateY(1px);
 }
 .btn-brand:disabled {
-  background: rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 0, 0, 0.25);
-  color: rgba(0, 0, 0, 0.4);
+  background: var(--disabled-bg);
+  border-color: var(--disabled-border);
+  color: var(--disabled-ink);
   cursor: not-allowed;
   filter: none;
 }
@@ -218,36 +259,53 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  border: 2px solid #000;
+  border: 2px solid var(--ink);
   background: transparent;
-  color: #000;
+  color: var(--ink);
   padding: 0.9rem 1.25rem;
   letter-spacing: 0.06em;
   transition: background-color 0.2s, color 0.2s;
 }
 .btn-ink:hover {
-  background: #000;
-  color: #fff;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* Quantity stepper frame */
+.qty-box {
+  border: 2px solid var(--ink);
+}
+
+/* Badge that sits on a photo */
+.badge-ink {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* Sold-out veil over a photo */
+.soldout-veil {
+  background: var(--veil);
 }
 
 /* Size / option chips */
 .chip {
   min-width: 3.25rem;
-  border: 2px solid rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--chip-border);
   padding: 0.5rem 0.85rem;
   font-size: 0.8rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   background: transparent;
+  color: var(--ink);
   transition: border-color 0.15s, background-color 0.15s, color 0.15s;
 }
 .chip:hover:not(:disabled) {
-  border-color: #000;
+  border-color: var(--ink);
 }
 .chip[aria-pressed="true"] {
-  border-color: #000;
-  background: #000;
-  color: #fff;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
 }
 .chip:disabled {
   opacity: 0.35;
@@ -261,7 +319,7 @@ body {
   transition: border-color 0.15s;
 }
 .thumb[aria-pressed="true"] {
-  border-color: #000;
+  border-color: var(--ink);
 }
 
 /* Collapsible details rows */

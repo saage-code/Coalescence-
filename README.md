@@ -15,10 +15,11 @@ project — push it to its own repository and deploy it on its own.
   announcement bar, big hero, product grid, about section, and an email/SMS
   signup in the footer. Cards link through to the product page.
 - **Product page** (`/products/<id>`) — a Shopify-shaped page carrying the lock
-  screen's branding: gradient announcement bar, wordmark header, breadcrumb,
-  photo gallery with thumbnails, script-set title, price and was-price, size
-  chips, quantity stepper, collapsible details, related products, and a signup
-  band in the brand gradient. See [The product page](#the-product-page).
+  screen's branding, on a dark surface by default (light is a toggle): gradient
+  announcement bar, wordmark header, breadcrumb, photo gallery with thumbnails,
+  script-set title, price and was-price, size chips, quantity stepper,
+  collapsible details, related products, and a signup band in the brand
+  gradient. See [The product page](#the-product-page).
 - **Admin panel** (`/admin`) — password-protected. From there the owner can:
   - **Lock / unlock the store.** When locked, customers see *only* the branded
     lock screen (teal gradient, brush-script logo, "BRB", and a JOIN SMS button
@@ -34,8 +35,8 @@ project — push it to its own repository and deploy it on its own.
   - **Hook up photos** — upload a hero background photo and product photos
     straight from the browser.
   - **Tune the touches** — brand name, tagline, announcement ticker, hero
-    headline, about text, accent color (color picker), socials, and the lock
-    screen's headline/message.
+    headline, about text, accent color (color picker), the product page's
+    dark/light surface, socials, and the lock screen's headline/message.
   - **See signups** — table of every email/phone captured, with one-click CSV
     export.
 
@@ -79,6 +80,34 @@ primary buttons — rather than as the page background. Both stops come from the
 lock screen's own `lockGradientTop` / `lockGradientBottom`, exposed site-wide as
 `--brand-top` / `--brand-bottom` in `app/layout.tsx`, so changing the lock
 screen's colours in the admin panel moves the storefront with it.
+
+**Dark or light surface**, set by `productTheme` (default **dark**) and switched
+in the admin panel under *The touches → Product page surface*. Every colour on
+the page is a CSS variable: the light values sit in `:root` and `.theme-dark`
+swaps them on the page wrapper, so one set of markup serves both. Three things
+worth knowing about the dark side:
+
+- **The wordmark needs its own file.** It renders through `<img>`, which can't
+  inherit `currentColor`, so its fill is baked in and the black one is invisible
+  on dark. `public/brand/wordmark-light.svg` is the white copy, and `logoFor()`
+  in `lib/db.ts` picks between them. An **admin-uploaded logo is left alone**,
+  since its colours are unknown — a dark custom logo will need a light version
+  of its own.
+- **The admin accent colour is bypassed on dark.** It defaults to black, which
+  is invisible there, so `.theme-dark` points `--accent` at the brand's top
+  gradient stop instead.
+- **The primary button's label stays ink-black in both themes**, because its fill
+  is always the brand gradient, which is mid-toned on either surface.
+
+Contrast was measured rather than eyeballed: body copy 17.6:1 and muted text
+6.9:1 on the dark surface, both past WCAG AA. The disabled CTA is set at 0.6
+alpha rather than a conventional 0.4 because its label is "Select a size" —
+instruction the customer has to read, not decoration — which measured only
+~2.5:1 on light and ~3.7:1 on dark at the lighter value.
+
+One thing to keep in mind when shooting product photos: on the dark surface a
+photo with a white studio background reads as a bright block. The demo shots in
+the screenshots show this. Photos on a mid or dark backdrop sit better.
 
 **Fonts: use `.font-script` / `.font-hand` here, not `.font-brush` /
 `.font-marker`.** The product page renders whatever the admin typed, and the two

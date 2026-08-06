@@ -714,6 +714,27 @@ export default function AdminDashboard({ initialSettings, initialProducts, initi
               </div>
             </label>
             <label>
+              <Label>Product page surface</Label>
+              <div className="flex gap-2">
+                {(["dark", "light"] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => set({ productTheme: mode })}
+                    aria-pressed={settings.productTheme === mode}
+                    className="flex-1 rounded-lg border px-4 py-2.5 text-xs tracking-widest uppercase transition-colors"
+                    style={
+                      settings.productTheme === mode
+                        ? { borderColor: "var(--ink)", background: "var(--ink)", color: "var(--bg)" }
+                        : { borderColor: "var(--line)", color: "var(--muted)" }
+                    }
+                  >
+                    {mode}
+                  </button>
+                ))}
+              </div>
+            </label>
+            <label>
               <Label>Contact email</Label>
               <input className="field" value={settings.contactEmail} onChange={(e) => set({ contactEmail: e.target.value })} placeholder="hello@yourbrand.com" />
             </label>

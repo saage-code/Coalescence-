@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProduct, getProducts, getSettings, parseSizes, productImages } from "@/lib/db";
+import { getProduct, getProducts, getSettings, logoFor, parseSizes, productImages } from "@/lib/db";
 import { isAdmin } from "@/lib/auth";
 import ProductDetail from "@/components/ProductDetail";
 import SignupForm from "@/components/SignupForm";
@@ -36,6 +36,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const product = getProduct(id);
   if (!product) notFound();
 
+  const surface = settings.productTheme;
+  const headerLogo = logoFor(settings, surface);
   const images = productImages(product);
   const sizes = parseSizes(product.sizes);
   const related = getProducts()
@@ -43,7 +45,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     .slice(0, 4);
 
   return (
-    <div>
+    // productTheme decides the surface; the class swaps the colour variables
+    // that everything below reads from.
+    <div className={surface === "dark" ? "theme-dark" : undefined}>
       {settings.announcement && (
         <div className="brand-gradient-x font-hand text-black text-center py-2 px-4 text-xs tracking-[0.3em] uppercase">
           {settings.announcement}
@@ -55,9 +59,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         style={{ borderColor: "var(--line)" }}
       >
         <Link href="/" aria-label={settings.brandName} className="shrink-0">
-          {settings.lockLogo ? (
+          {headerLogo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={settings.lockLogo} alt={settings.brandName} className="h-6 sm:h-8 w-auto" />
+            <img src={headerLogo} alt={settings.brandName} className="h-6 sm:h-8 w-auto" />
           ) : (
             <span className="font-script text-2xl">{settings.brandName}</span>
           )}
@@ -110,10 +114,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-5">
               {related.map((p) => (
                 <Link key={p.id} href={`/products/${p.id}`} className="group block">
-                  <div
-                    className="relative aspect-[4/5] overflow-hidden"
-                    style={{ background: "rgba(0,0,0,0.04)" }}
-                  >
+                  <div className="photo-surface relative aspect-[4/5] overflow-hidden">
                     {p.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -127,8 +128,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                       </div>
                     )}
                     {p.soldOut && (
-                      <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-                        <span className="font-hand border-2 border-black px-3 py-1 text-[10px] tracking-[0.25em] uppercase">
+                      <div className="soldout-veil absolute inset-0 flex items-center justify-center">
+                        <span
+                          className="font-hand border-2 px-3 py-1 text-[10px] tracking-[0.25em] uppercase"
+                          style={{ borderColor: "var(--ink)" }}
+                        >
                           Sold out
                         </span>
                       </div>
