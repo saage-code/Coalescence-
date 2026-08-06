@@ -86,7 +86,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   // Sampled from the sticker's background, which is a pure vertical ramp.
   lockGradientTop: "#4BD8B2",
   lockGradientBottom: "#216A9F",
-  productTheme: "dark",
+  productTheme: "light",
 };
 
 function ensureDirs() {

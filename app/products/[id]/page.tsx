@@ -14,8 +14,8 @@ function PersonIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="22"
-      height="22"
+      width="30"
+      height="30"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.6"
@@ -34,8 +34,8 @@ function BagIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      width="22"
-      height="22"
+      width="30"
+      height="30"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.6"

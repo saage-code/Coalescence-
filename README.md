@@ -15,7 +15,7 @@ project — push it to its own repository and deploy it on its own.
   announcement bar, big hero, product grid, about section, and an email/SMS
   signup in the footer. Cards link through to the product page.
 - **Product page** (`/products/<id>`) — a Shopify-shaped page carrying the lock
-  screen's branding, on a dark surface by default (light is a toggle): wordmark
+  screen's branding, on a light surface by default (dark is a toggle): wordmark
   header, breadcrumb, photo gallery with thumbnails, script-set title, price and
   was-price, size chips, quantity stepper, collapsible details, related products,
   and a signup band in the brand gradient. See
@@ -88,11 +88,11 @@ lock screen's own `lockGradientTop` / `lockGradientBottom`, exposed site-wide as
 `--brand-top` / `--brand-bottom` in `app/layout.tsx`, so changing the lock
 screen's colours in the admin panel moves the storefront with it.
 
-**Dark or light surface**, set by `productTheme` (default **dark**) and switched
+**Light or dark surface**, set by `productTheme` (default **light**) and switched
 in the admin panel under *The touches → Product page surface*. Every colour on
 the page is a CSS variable: the light values sit in `:root` and `.theme-dark`
 swaps them on the page wrapper, so one set of markup serves both. Three things
-worth knowing about the dark side:
+worth knowing if you switch to dark:
 
 - **The wordmark needs its own file.** It renders through `<img>`, which can't
   inherit `currentColor`, so its fill is baked in and the black one is invisible
@@ -112,9 +112,9 @@ alpha rather than a conventional 0.4 because its label is "Select a size" —
 instruction the customer has to read, not decoration — which measured only
 ~2.5:1 on light and ~3.7:1 on dark at the lighter value.
 
-One thing to keep in mind when shooting product photos: on the dark surface a
-photo with a white studio background reads as a bright block. The demo shots in
-the screenshots show this. Photos on a mid or dark backdrop sit better.
+One thing to keep in mind if you switch to dark: a product photo on a white
+studio background reads as a bright block there. Photos on a mid or dark backdrop
+sit better on that surface.
 
 **Fonts: use `.font-script` / `.font-hand` here, not `.font-brush` /
 `.font-marker`.** The product page renders whatever the admin typed, and the two

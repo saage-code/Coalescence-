@@ -716,7 +716,7 @@ export default function AdminDashboard({ initialSettings, initialProducts, initi
             <label>
               <Label>Product page surface</Label>
               <div className="flex gap-2">
-                {(["dark", "light"] as const).map((mode) => (
+                {(["light", "dark"] as const).map((mode) => (
                   <button
                     key={mode}
                     type="button"

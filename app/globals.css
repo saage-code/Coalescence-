@@ -215,14 +215,15 @@ body {
   background: var(--photo-bg);
 }
 
-/* Header icon button. 44px box so it's a real touch target even though the glyph
-   is 22px, and a visible focus ring since there's no text label to outline. */
+/* Header icon button. 48px box around the 30px glyph — sized up to balance the
+   wordmark beside it, which is 32px tall — with a visible focus ring, since an
+   icon has no text label to outline. */
 .icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   color: inherit;
   transition: opacity 0.15s;
 }
