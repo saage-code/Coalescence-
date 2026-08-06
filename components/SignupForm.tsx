@@ -141,13 +141,13 @@ export default function SignupForm({
         {smsOnly ? (
           <>
             By signing up you agree to receive occasional drop announcements by SMS. Msg &amp;
-            data rates may apply. Unsubscribe anytime.
+            data rates may apply. Opt-out anytime.
           </>
         ) : (
           <>
             Enter an email, a phone number, or both. By signing up you agree to receive
             occasional drop announcements by email or SMS. Msg &amp; data rates may apply.
-            Unsubscribe anytime.
+            Opt-out anytime.
           </>
         )}
       </p>
