@@ -131,6 +131,19 @@ four are editable in the admin panel. Every read goes through `normalizeProduct`
 so a `data/products.json` written before these fields existed still renders
 instead of showing `undefined`.
 
+**Header icons.** The Shop / About / Instagram links were replaced with a person
+icon and a shopping-bag icon, drawn inline in `app/products/[id]/page.tsx` —
+no icon dependency, no extra request, stroked in `currentColor` so one set of
+paths covers both surfaces. Each is a 44px target with a focus ring, since
+there's no text label to outline.
+
+Neither icon is backed by a feature: **this project has no accounts and no
+cart.** Rather than leave them dead, each points at the nearest real
+destination — the person icon at the contact email (then Instagram, then the
+about section), the bag at the product grid. Customers will read them as
+"my account" and "my cart", so treat them as placeholders for features to
+build, or swap them for icons that match what they do.
+
 While the store is locked, product URLs 404 for customers — a direct link must
 not be a way around the lock screen — while the admin can still open them to
 build the shop out before opening.

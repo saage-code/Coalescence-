@@ -215,6 +215,25 @@ body {
   background: var(--photo-bg);
 }
 
+/* Header icon button. 44px box so it's a real touch target even though the glyph
+   is 22px, and a visible focus ring since there's no text label to outline. */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: inherit;
+  transition: opacity 0.15s;
+}
+.icon-btn:hover {
+  opacity: 0.55;
+}
+.icon-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -6px;
+}
+
 .brand-gradient {
   background: linear-gradient(180deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
 }
