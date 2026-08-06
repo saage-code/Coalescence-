@@ -193,7 +193,7 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
                 rel="noreferrer"
                 className="btn-brand font-hand text-lg"
               >
-                Buy now
+                Add to Cart
               </a>
             )
           ) : askHref ? (
@@ -217,13 +217,15 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
             </a>
           )}
 
-          <p className="text-[11px] leading-relaxed text-center" style={{ color: "var(--muted)" }}>
-            {product.soldOut
-              ? "This one's gone — drops don't restock, but new pieces are announced by SMS first."
-              : product.buyUrl
-                ? "Checkout opens in a new tab. Cut and numbered in a small run."
+          {/* No caption under a purchasable product's button. The two kept here
+              aren't decoration: they explain a button the customer can't use. */}
+          {(product.soldOut || !product.buyUrl) && (
+            <p className="text-[11px] leading-relaxed text-center" style={{ color: "var(--muted)" }}>
+              {product.soldOut
+                ? "This one's gone — drops don't restock, but new pieces are announced by SMS first."
                 : "Ordering isn't wired up yet — get in touch and we'll sort it."}
-          </p>
+            </p>
+          )}
         </div>
 
         {/* Details rows */}

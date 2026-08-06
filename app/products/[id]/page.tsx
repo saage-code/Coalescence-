@@ -48,12 +48,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     // productTheme decides the surface; the class swaps the colour variables
     // that everything below reads from.
     <div className={surface === "dark" ? "theme-dark" : undefined}>
-      {settings.announcement && (
-        <div className="brand-gradient-x font-hand text-black text-center py-2 px-4 text-xs tracking-[0.3em] uppercase">
-          {settings.announcement}
-        </div>
-      )}
-
+      {/* No announcement bar here by choice — the page opens on the wordmark.
+          The storefront still shows settings.announcement above its header. */}
       <header
         className="flex items-center justify-between gap-4 px-6 sm:px-10 py-5 border-b"
         style={{ borderColor: "var(--line)" }}
@@ -106,7 +102,19 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           <span style={{ color: "var(--ink)" }}>{product.name}</span>
         </nav>
 
-        <ProductDetail product={product} images={images} sizes={sizes} settings={settings} />
+        {/* Only the three fields ProductDetail declares. Passing the whole
+            settings object type-checks, but it's a client component, so every
+            other field would be serialised into the page payload for nothing. */}
+        <ProductDetail
+          product={product}
+          images={images}
+          sizes={sizes}
+          settings={{
+            brandName: settings.brandName,
+            contactEmail: settings.contactEmail,
+            instagram: settings.instagram,
+          }}
+        />
 
         {related.length > 0 && (
           <section className="mt-20 sm:mt-28">

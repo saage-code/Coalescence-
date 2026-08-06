@@ -15,11 +15,11 @@ project — push it to its own repository and deploy it on its own.
   announcement bar, big hero, product grid, about section, and an email/SMS
   signup in the footer. Cards link through to the product page.
 - **Product page** (`/products/<id>`) — a Shopify-shaped page carrying the lock
-  screen's branding, on a dark surface by default (light is a toggle): gradient
-  announcement bar, wordmark header, breadcrumb, photo gallery with thumbnails,
-  script-set title, price and was-price, size chips, quantity stepper,
-  collapsible details, related products, and a signup band in the brand
-  gradient. See [The product page](#the-product-page).
+  screen's branding, on a dark surface by default (light is a toggle): wordmark
+  header, breadcrumb, photo gallery with thumbnails, script-set title, price and
+  was-price, size chips, quantity stepper, collapsible details, related products,
+  and a signup band in the brand gradient. See
+  [The product page](#the-product-page).
 - **Admin panel** (`/admin`) — password-protected. From there the owner can:
   - **Lock / unlock the store.** When locked, customers see *only* the branded
     lock screen (teal gradient, brush-script logo, "BRB!", and a JOIN SMS button
@@ -59,13 +59,20 @@ npm run dev
 `components/ProductDetail.tsx` for the interactive half (gallery, sizes,
 quantity, call to action).
 
-**There is still no cart or checkout**, deliberately, as everywhere else in this
-project. The page is Shopify-*shaped*, not Shopify-backed, and the primary
-button reflects that rather than faking an "Add to cart":
+**There is still no cart or checkout** — the page is Shopify-*shaped*, not
+Shopify-backed.
+
+Note the label and the behaviour don't match: the primary button reads **"Add to
+Cart"** because that's what was asked for, but nothing is added to anything. It
+opens the product's buy link in a new tab, the same as before it was renamed, and
+the caption that used to say so ("Checkout opens in a new tab") was removed at
+the same time. Customers will expect a cart. Either build one, or use a label
+that describes the jump ("Buy now", "Checkout") — `components/ProductDetail.tsx`
+is the only place it appears.
 
 | Product state | Button | Where it goes |
 | --- | --- | --- |
-| Has a buy link | `Buy now` | the buy link, with `?size=` and `?qty=` appended |
+| Has a buy link | `Add to Cart` | the buy link, with `?size=` and `?qty=` appended |
 | Has sizes, none picked | `Select a size` | disabled until one is chosen |
 | No buy link | `Ask about this piece` | `mailto:` the contact email with the piece and size prefilled, else Instagram |
 | Sold out | `Sold out` (disabled) | plus `Tell me when it's back`, jumping to the signup band |
@@ -75,8 +82,8 @@ DM link or relative path is passed through untouched. Stripe and PayPal ignore
 params they don't know.
 
 **Theme.** Photos need a neutral surround, so the brand gradient is used as
-banding and accents — the announcement bar, the signup band, and the fill on
-primary buttons — rather than as the page background. Both stops come from the
+banding and accents — the signup band and the fill on primary buttons — rather
+than as the page background. Both stops come from the
 lock screen's own `lockGradientTop` / `lockGradientBottom`, exposed site-wide as
 `--brand-top` / `--brand-bottom` in `app/layout.tsx`, so changing the lock
 screen's colours in the admin panel moves the storefront with it.

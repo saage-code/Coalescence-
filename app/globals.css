@@ -218,9 +218,6 @@ body {
 .brand-gradient {
   background: linear-gradient(180deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
 }
-.brand-gradient-x {
-  background: linear-gradient(90deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
-}
 
 /* Primary call to action: gradient fill, ink text, squared off like the
    sticker's button. */
