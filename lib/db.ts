@@ -56,10 +56,9 @@ export type Signup = {
   createdAt: string;
 };
 
-/** The wordmark shipped as the default lockLogo, and its light counterpart.
-    Declared above DEFAULT_SETTINGS because that object references it. */
+/** The wordmark shipped as the default lockLogo. Declared above
+    DEFAULT_SETTINGS because that object references it. */
 export const DEFAULT_LOCK_LOGO = "/brand/wordmark.svg";
-const DEFAULT_LOCK_LOGO_LIGHT = "/brand/wordmark-light.svg";
 
 export const DEFAULT_SETTINGS: SiteSettings = {
   brandName: "COALESCENCE",
@@ -163,19 +162,6 @@ export function parseSizes(sizes: string): string[] {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-}
-
-/**
- * The bundled wordmark is an `<img>`, so it can't inherit currentColor — its
- * fill is baked in, and the black one disappears on a dark surface. Swap in the
- * white copy there. An admin-uploaded logo is left alone, since its colours are
- * unknown; a dark custom logo needs a light version of its own.
- */
-export function logoFor(settings: SiteSettings, surface: "light" | "dark"): string {
-  if (surface === "dark" && settings.lockLogo === DEFAULT_LOCK_LOGO) {
-    return DEFAULT_LOCK_LOGO_LIGHT;
-  }
-  return settings.lockLogo;
 }
 
 /** Lead image plus gallery, de-duplicated, for the product page thumbnails. */

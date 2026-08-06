@@ -15,10 +15,11 @@ project — push it to its own repository and deploy it on its own.
   announcement bar, big hero, product grid, about section, and an email/SMS
   signup in the footer. Cards link through to the product page.
 - **Product page** (`/products/<id>`) — a Shopify-shaped page carrying the lock
-  screen's branding, on a light surface by default (dark is a toggle): wordmark
-  header, breadcrumb, photo gallery with thumbnails, script-set title, price and
-  was-price, size chips, quantity stepper, collapsible details, related products,
-  and a signup band in the brand gradient. See
+  screen's branding, on a light surface by default (dark is a toggle): gradient
+  header bar with the wordmark, breadcrumb, photo gallery with thumbnails,
+  script-set title, price and was-price, size chips, quantity stepper,
+  collapsible details, related products, and a signup band in the brand
+  gradient. See
   [The product page](#the-product-page).
 - **Admin panel** (`/admin`) — password-protected. From there the owner can:
   - **Lock / unlock the store.** When locked, customers see *only* the branded
@@ -82,8 +83,8 @@ DM link or relative path is passed through untouched. Stripe and PayPal ignore
 params they don't know.
 
 **Theme.** Photos need a neutral surround, so the brand gradient is used as
-banding and accents — the signup band and the fill on primary buttons — rather
-than as the page background. Both stops come from the
+banding and accents — the header bar, the signup band, and the fill on primary
+buttons — rather than as the page background. Both stops come from the
 lock screen's own `lockGradientTop` / `lockGradientBottom`, exposed site-wide as
 `--brand-top` / `--brand-bottom` in `app/layout.tsx`, so changing the lock
 screen's colours in the admin panel moves the storefront with it.
@@ -94,12 +95,11 @@ the page is a CSS variable: the light values sit in `:root` and `.theme-dark`
 swaps them on the page wrapper, so one set of markup serves both. Three things
 worth knowing if you switch to dark:
 
-- **The wordmark needs its own file.** It renders through `<img>`, which can't
-  inherit `currentColor`, so its fill is baked in and the black one is invisible
-  on dark. `public/brand/wordmark-light.svg` is the white copy, and `logoFor()`
-  in `lib/db.ts` picks between them. An **admin-uploaded logo is left alone**,
-  since its colours are unknown — a dark custom logo will need a light version
-  of its own.
+- **The header bar doesn't follow the theme.** `.brand-bar` is the brand gradient
+  with black contents on both surfaces, like the signup band — the gradient is
+  mid-toned, so a near-white wordmark would wash out against its teal end. This
+  is also why the page no longer needs a white copy of the wordmark: the one
+  black `wordmark.svg` is correct everywhere it appears.
 - **The admin accent colour is bypassed on dark.** It defaults to black, which
   is invisible there, so `.theme-dark` points `--accent` at the brand's top
   gradient stop instead.
@@ -130,6 +130,10 @@ the unverified brand-font licensing.
 four are editable in the admin panel. Every read goes through `normalizeProduct`,
 so a `data/products.json` written before these fields existed still renders
 instead of showing `undefined`.
+
+`description` is no longer shown on the page — it was removed from between the
+price and the size chips. It still earns its keep as the page's meta description,
+with whitespace collapsed first so the paragraph breaks don't land in the tag.
 
 **Header icons.** The Shop / About / Instagram links were replaced with a person
 icon and a shopping-bag icon, drawn inline in `app/products/[id]/page.tsx` —

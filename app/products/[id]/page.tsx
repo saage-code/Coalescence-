@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProduct, getProducts, getSettings, logoFor, parseSizes, productImages } from "@/lib/db";
+import { getProduct, getProducts, getSettings, parseSizes, productImages } from "@/lib/db";
 import { isAdmin } from "@/lib/auth";
 import ProductDetail from "@/components/ProductDetail";
 import SignupForm from "@/components/SignupForm";
@@ -62,9 +62,13 @@ export async function generateMetadata({
   const product = getProduct(id);
   const settings = getSettings();
   if (!product) return { title: `Not found — ${settings.brandName}` };
+  // The description field holds paragraphs separated by blank lines, so collapse
+  // whitespace before it goes in a meta tag — otherwise the newlines end up in
+  // the tag verbatim.
+  const summary = product.description.replace(/\s+/g, " ").trim();
   return {
     title: `${product.name} — ${settings.brandName}`,
-    description: product.description.slice(0, 160) || settings.tagline,
+    description: summary.slice(0, 160) || settings.tagline,
   };
 }
 
@@ -82,7 +86,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   if (!product) notFound();
 
   const surface = settings.productTheme;
-  const headerLogo = logoFor(settings, surface);
   // Nearest real destination for the person icon: email, then Instagram, then
   // the about section — so it always goes somewhere.
   const accountHref = settings.contactEmail
@@ -100,14 +103,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     <div className={surface === "dark" ? "theme-dark" : undefined}>
       {/* No announcement bar here by choice — the page opens on the wordmark.
           The storefront still shows settings.announcement above its header. */}
-      <header
-        className="flex items-center justify-between gap-4 px-6 sm:px-10 py-5 border-b"
-        style={{ borderColor: "var(--line)" }}
-      >
+      <header className="brand-bar flex items-center justify-between gap-4 px-6 sm:px-10 py-5">
         <Link href="/" aria-label={settings.brandName} className="shrink-0">
-          {headerLogo ? (
+          {settings.lockLogo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={headerLogo} alt={settings.brandName} className="h-6 sm:h-8 w-auto" />
+            <img src={settings.lockLogo} alt={settings.brandName} className="h-6 sm:h-8 w-auto" />
           ) : (
             <span className="font-script text-2xl">{settings.brandName}</span>
           )}
@@ -116,7 +116,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             Neither an account system nor a cart exists in this project, so each
             points at the nearest real destination rather than sitting dead:
             the person icon at contact, the bag at the product grid. */}
-        <nav className="flex items-center gap-1 sm:gap-2" style={{ color: "var(--ink)" }}>
+        <nav className="flex items-center gap-1 sm:gap-2">
           <a
             href={accountHref}
             {...(accountHref.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}

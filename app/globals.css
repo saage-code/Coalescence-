@@ -231,12 +231,23 @@ body {
   opacity: 0.55;
 }
 .icon-btn:focus-visible {
-  outline: 2px solid var(--ink);
+  /* currentColor, not --ink: on the gradient bar the icons are black in both
+     themes, and --ink would be near-white on the dark surface. */
+  outline: 2px solid currentColor;
   outline-offset: -6px;
 }
 
 .brand-gradient {
   background: linear-gradient(180deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
+}
+
+/* Gradient header bar. Like the signup band, this is the same on both surfaces:
+   the gradient is mid-toned, so its contents stay ink-black whether the page
+   around it is light or dark — a near-white wordmark would wash out against the
+   teal end. So it deliberately does NOT read --ink. */
+.brand-bar {
+  background: linear-gradient(90deg, var(--brand-top) 0%, var(--brand-bottom) 100%);
+  color: #000;
 }
 
 /* Primary call to action: gradient fill, ink text, squared off like the

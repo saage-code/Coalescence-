@@ -104,15 +104,8 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
           )}
         </div>
 
-        {product.description && (
-          <div className="mt-6 flex flex-col gap-3 text-sm leading-relaxed">
-            {product.description.split(/\n\s*\n/).map((para, i) => (
-              <p key={i} className="whitespace-pre-line">
-                {para}
-              </p>
-            ))}
-          </div>
-        )}
+        {/* Description isn't shown between price and sizes any more. The field is
+            still used — it feeds the page's meta description in page.tsx. */}
 
         {sizes.length > 0 && (
           <div className="mt-8">
