@@ -6,7 +6,7 @@ project — push it to its own repository and deploy it on its own.
 ## What it does
 
 - **Lock screen** (`/` while locked) — the finished, branded page, rebuilt to
-  match the QR sticker artwork: vertical teal gradient, brush wordmark, "BRB",
+  match the QR sticker artwork: vertical teal gradient, brush wordmark, "BRB!",
   and an outlined JOIN SMS button that opens a single SMS bar — one phone field
   plus JOIN, in the same footprint the button occupied. See
   [Lock screen fidelity](#lock-screen-fidelity) for how it was derived.
@@ -22,7 +22,7 @@ project — push it to its own repository and deploy it on its own.
   gradient. See [The product page](#the-product-page).
 - **Admin panel** (`/admin`) — password-protected. From there the owner can:
   - **Lock / unlock the store.** When locked, customers see *only* the branded
-    lock screen (teal gradient, brush-script logo, "BRB", and a JOIN SMS button
+    lock screen (teal gradient, brush-script logo, "BRB!", and a JOIN SMS button
     that opens the SMS bar) — no products, no prices, nothing else. The
     admin still sees the full site (with a banner) so they can keep working on it.
   - **Design the lock screen** — upload a logo image (or fall back to the brand
@@ -132,10 +132,8 @@ build the shop out before opening.
 
 The lock screen is a reproduction of the supplied QR sticker PDF, measured
 rather than eyeballed. Rendered at the artwork's own 612x792, every element
-matches the print to the pixel — wordmark 522x62, headline 40 tall, button
-368x90, with 38px and 55px gaps between the rows. (The headline now
-measures 88 wide against the print's 100 purely because the copy dropped the
-exclamation mark; the geometry is untouched.)
+matches the print to the pixel — wordmark 522x62, headline 100x40, button
+368x90, with 38px and 55px gaps between the rows.
 
 Where each piece came from:
 
@@ -178,15 +176,13 @@ inline at 1440, 22.3px inline at 768, 16px stacked at 390 and 320.
 To go back to collecting email as well, drop the `smsOnly` prop in
 `components/LockScreen.tsx`; everything else is driven off it.
 
-Deliberate departures from the artwork:
+Two deliberate departures from the artwork:
 
 - The printed headline and button sit ~7px left of the page centre while the
   wordmark is centred — an inconsistency in the artwork. All three are properly
   centred here.
 - The fonts are handled as described below rather than being baked in, so the
   copy stays editable.
-- The copy differs: the print reads "BRB!", the site "BRB". The headline is the
-  admin-editable `lockHeadline`, so this is a default, not a layout constant.
 
 ### Brand fonts, and one thing to check
 

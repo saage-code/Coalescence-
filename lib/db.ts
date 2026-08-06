@@ -74,8 +74,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   tiktok: "",
   contactEmail: "",
   locked: false,
-  // The sticker prints this as "BRB!"; the exclamation was dropped by choice.
-  lockHeadline: "BRB",
+  // As printed on the sticker.
+  lockHeadline: "BRB!",
   // Empty by default so the lock screen stays clean: logo, subtitle, button.
   lockMessage: "",
   // The brand wordmark from the sticker artwork, as outlined vector so it
