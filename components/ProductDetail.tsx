@@ -224,7 +224,7 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
         {/* Details rows */}
         <div className="mt-10">
           <details className="acc-row" open>
-            <summary>The details</summary>
+            <summary>Description</summary>
             <div className="pb-4 text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
               <ul className="flex flex-col gap-1.5">
                 <li>Cut, printed and numbered in small runs.</li>
