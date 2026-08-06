@@ -96,16 +96,17 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
         </h1>
 
         <div className="mt-4 flex items-baseline gap-3">
-          {product.price && <span className="text-2xl">{product.price}</span>}
+          {product.price && <span className="text-3xl">{product.price}</span>}
+          {/* Bumped with the price so the was-price stays subordinate to it. */}
           {product.compareAtPrice && (
-            <span className="text-base line-through" style={{ color: "var(--muted)" }}>
+            <span className="text-lg line-through" style={{ color: "var(--muted)" }}>
               {product.compareAtPrice}
             </span>
           )}
         </div>
 
-        {/* Description isn't shown between price and sizes any more. The field is
-            still used — it feeds the page's meta description in page.tsx. */}
+        {/* No description here — it lives in the Description section further
+            down, alongside shipping. */}
 
         {sizes.length > 0 && (
           <div className="mt-8">
@@ -223,17 +224,23 @@ export default function ProductDetail({ product, images, sizes, settings }: Prop
 
         {/* Details rows */}
         <div className="mt-10">
-          <details className="acc-row" open>
-            <summary>Description</summary>
-            <div className="pb-4 text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
-              <ul className="flex flex-col gap-1.5">
-                <li>Cut, printed and numbered in small runs.</li>
-                {sizes.length > 0 && <li>Available in {sizes.join(", ")}.</li>}
-                {product.tag && <li>{product.tag}.</li>}
-                <li>Once a drop sells out, it&apos;s gone for good.</li>
-              </ul>
-            </div>
-          </details>
+          {/* The admin's own copy for this piece, not generated lines. Hidden
+              entirely when the field is blank rather than opening onto nothing. */}
+          {product.description && (
+            <details className="acc-row" open>
+              <summary>Description</summary>
+              <div
+                className="pb-4 flex flex-col gap-3 text-sm leading-relaxed"
+                style={{ color: "var(--muted)" }}
+              >
+                {product.description.split(/\n\s*\n/).map((para, i) => (
+                  <p key={i} className="whitespace-pre-line">
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </details>
+          )}
           <details className="acc-row">
             <summary>Shipping &amp; returns</summary>
             <div className="pb-4 text-sm leading-relaxed" style={{ color: "var(--muted)" }}>

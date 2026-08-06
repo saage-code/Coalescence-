@@ -131,9 +131,12 @@ four are editable in the admin panel. Every read goes through `normalizeProduct`
 so a `data/products.json` written before these fields existed still renders
 instead of showing `undefined`.
 
-`description` is no longer shown on the page — it was removed from between the
-price and the size chips. It still earns its keep as the page's meta description,
-with whitespace collapsed first so the paragraph breaks don't land in the tag.
+`description` renders inside the **Description** section, next to Shipping &
+returns, rather than between the price and the size chips where it started. Blank
+lines in the field become paragraphs. The section is hidden entirely when the
+field is empty, rather than opening onto nothing — so it's worth filling in per
+product. The same text also supplies the page's meta description, with whitespace
+collapsed first so the paragraph breaks don't land in the tag.
 
 **Header icons.** The Shop / About / Instagram links were replaced with a person
 icon and a shopping-bag icon, drawn inline in `app/products/[id]/page.tsx` —
