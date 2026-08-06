@@ -36,17 +36,9 @@ export default async function Home() {
         </div>
       )}
 
-      {/* Announcement sits above the gradient bar, in ink rather than colour, so
-          the two strips stay distinct instead of blending into one band. */}
-      {settings.announcement && (
-        <div
-          className="font-hand text-center py-2 px-4 text-[11px] tracking-[0.3em] uppercase"
-          style={{ background: "#000", color: "#fff" }}
-        >
-          {settings.announcement}
-        </div>
-      )}
-
+      {/* No announcement strip — the page opens on the gradient bar. Note this
+          leaves settings.announcement with nowhere to render, here or on the
+          product page. */}
       <SiteHeader settings={settings} />
 
       <main>
@@ -67,17 +59,11 @@ export default async function Home() {
             </>
           )}
           <div className="relative max-w-4xl">
-            {settings.tagline && (
-              <p
-                className="font-hand text-sm tracking-[0.3em] uppercase"
-                style={{ color: "var(--muted)" }}
-              >
-                {settings.tagline}
-              </p>
-            )}
-            {/* Script, not the subset brush face: the headline is admin-typed, and
-                the subsets would claim the odd letter mid-word. */}
-            <h1 className="font-script mt-4 text-5xl sm:text-7xl lg:text-8xl leading-[1.02] whitespace-pre-line">
+            {/* Tagline isn't shown above the headline any more. The field still
+                works — it's the site's meta description in app/layout.tsx.
+                Script, not the subset brush face: the headline is admin-typed,
+                and the subsets would claim the odd letter mid-word. */}
+            <h1 className="font-script text-5xl sm:text-7xl lg:text-8xl leading-[1.02] whitespace-pre-line">
               {settings.heroHeadline}
             </h1>
             <div className="mt-10 max-w-xs">
@@ -91,7 +77,7 @@ export default async function Home() {
         {/* Products */}
         <section id="shop" className="px-6 sm:px-10 pb-24">
           <div className="flex items-baseline justify-between gap-4 mb-8">
-            <h2 className="font-script text-3xl sm:text-4xl">The drop</h2>
+            <h2 className="font-script text-3xl sm:text-4xl">Dreams Collection</h2>
             <span
               className="font-hand text-[11px] tracking-[0.25em] uppercase shrink-0"
               style={{ color: "var(--muted)" }}
