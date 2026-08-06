@@ -10,10 +10,10 @@ project — push it to its own repository and deploy it on its own.
   and an outlined JOIN SMS button that opens a single SMS bar — one phone field
   plus JOIN, in the same footprint the button occupied. See
   [Lock screen fidelity](#lock-screen-fidelity) for how it was derived.
-- **Storefront** (`/` while open) — still deliberately plain black-and-white
-  (basic font, no colors) so the shop's real look can be layered on later:
-  announcement bar, big hero, product grid, about section, and an email/SMS
-  signup in the footer. Cards link through to the product page.
+- **Homepage** (`/` while open) — branded in the same palette and faces as the
+  lock screen: announcement strip, gradient header bar with the wordmark,
+  script-set hero over an optional hero photo, gradient CTA, product grid, about
+  section, and the signup band. Cards link through to the product page.
 - **Product page** (`/products/<id>`) — a Shopify-shaped page carrying the lock
   screen's branding, on a light surface by default (dark is a toggle): gradient
   header bar with the wordmark, breadcrumb, photo gallery with thumbnails,
@@ -36,7 +36,7 @@ project — push it to its own repository and deploy it on its own.
   - **Hook up photos** — upload a hero background photo and product photos
     straight from the browser.
   - **Tune the touches** — brand name, tagline, announcement ticker, hero
-    headline, about text, accent color (color picker), the product page's
+    headline, about text, accent color (color picker), the storefront's
     dark/light surface, socials, and the lock screen's headline/message.
   - **See signups** — table of every email/phone captured, with one-click CSV
     export.
@@ -53,6 +53,27 @@ npm run dev
 - Admin: http://localhost:3000/admin — password is whatever `ADMIN_PASSWORD` is
   set to (falls back to `admin` for local preview; the admin panel shows a
   warning until you change it).
+
+## Storefront chrome
+
+The homepage and the product page share three components so they can't drift
+apart — the mistake worth avoiding here, since the admin preview had already done
+exactly that with the lock screen:
+
+- `components/SiteHeader.tsx` — the gradient bar, wordmark and the two icons
+- `components/SignupBand.tsx` — the gradient signup band
+- `components/SiteFooter.tsx` — socials and contact
+
+Both pages also read the same `productTheme` setting for their surface, so moving
+between them doesn't jump from light to dark.
+
+**Type on the storefront uses `.font-script` / `.font-hand`, never
+`.font-brush` / `.font-marker`.** Everything here is admin-typed — hero headline,
+product names, about copy — and the two real brand faces are subsets that would
+claim the odd letter mid-word (an uppercase `S` from `RegularBrush`, an `M` from
+`fourHand`), splitting a single word across two letterforms. Body copy stays in
+the plain face: the script is for display sizes, and a paragraph of it is hard
+going.
 
 ## The product page
 
@@ -90,7 +111,9 @@ lock screen's own `lockGradientTop` / `lockGradientBottom`, exposed site-wide as
 screen's colours in the admin panel moves the storefront with it.
 
 **Light or dark surface**, set by `productTheme` (default **light**) and switched
-in the admin panel under *The touches → Product page surface*. Every colour on
+in the admin panel under *The touches → Store surface*. It applies to the homepage
+as well as the product page; the JSON key kept its original name so settings
+already saved to `data/site.json` keep working. Every colour on
 the page is a CSS variable: the light values sit in `:root` and `.theme-dark`
 swaps them on the page wrapper, so one set of markup serves both. Three things
 worth knowing if you switch to dark:
@@ -115,15 +138,6 @@ instruction the customer has to read, not decoration — which measured only
 One thing to keep in mind if you switch to dark: a product photo on a white
 studio background reads as a bright block there. Photos on a mid or dark backdrop
 sit better on that surface.
-
-**Fonts: use `.font-script` / `.font-hand` here, not `.font-brush` /
-`.font-marker`.** The product page renders whatever the admin typed, and the two
-real brand faces are subsets — on arbitrary copy they claim the odd letter
-(an uppercase `S` from `RegularBrush`, an `M` from `fourHand`) and leave the rest
-to the face behind, splitting a single word across two letterforms. The
-`script`/`hand` stacks drop the subset faces so text always renders in one face.
-They're the Apache-licensed Google fonts too, so nothing on this page depends on
-the unverified brand-font licensing.
 
 **Product fields.** `Product` in `lib/db.ts` gained `description`, `sizes`
 (comma-separated), `gallery` (up to 8 extra photos), and `compareAtPrice`; all

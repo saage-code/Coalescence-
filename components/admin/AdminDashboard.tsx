@@ -714,7 +714,7 @@ export default function AdminDashboard({ initialSettings, initialProducts, initi
               </div>
             </label>
             <label>
-              <Label>Product page surface</Label>
+              <Label>Store surface (homepage + product pages)</Label>
               <div className="flex gap-2">
                 {(["light", "dark"] as const).map((mode) => (
                   <button

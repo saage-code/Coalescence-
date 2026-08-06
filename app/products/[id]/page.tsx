@@ -4,54 +4,11 @@ import { notFound } from "next/navigation";
 import { getProduct, getProducts, getSettings, parseSizes, productImages } from "@/lib/db";
 import { isAdmin } from "@/lib/auth";
 import ProductDetail from "@/components/ProductDetail";
-import SignupForm from "@/components/SignupForm";
+import SignupBand from "@/components/SignupBand";
+import SiteFooter from "@/components/SiteFooter";
+import SiteHeader from "@/components/SiteHeader";
 
 export const dynamic = "force-dynamic";
-
-// Inline so there's no icon dependency and no extra request, and stroked in
-// currentColor so both surfaces are covered by the same markup.
-function PersonIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="30"
-      height="30"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <circle cx="12" cy="8.2" r="3.6" />
-      <path d="M4.8 20c0-3.5 3.2-5.9 7.2-5.9s7.2 2.4 7.2 5.9" />
-    </svg>
-  );
-}
-
-function BagIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="30"
-      height="30"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      {/* Straight sides, not tapered — a taper reads as a trash can. The handle
-          is a single wide curve at 61% of the body width; drawn with vertical
-          stubs into an arc instead, it reads as a padlock shackle. */}
-      <path d="M5.4 7.6h13.2v11.4a1.9 1.9 0 0 1-1.9 1.9H7.3a1.9 1.9 0 0 1-1.9-1.9V7.6Z" />
-      <path d="M8 7.6c0-2.35 1.79-4.25 4-4.25s4 1.9 4 4.25" />
-    </svg>
-  );
-}
 
 export async function generateMetadata({
   params,
@@ -86,11 +43,6 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   if (!product) notFound();
 
   const surface = settings.productTheme;
-  // Nearest real destination for the person icon: email, then Instagram, then
-  // the about section — so it always goes somewhere.
-  const accountHref = settings.contactEmail
-    ? `mailto:${settings.contactEmail}`
-    : settings.instagram || "/#about";
   const images = productImages(product);
   const sizes = parseSizes(product.sizes);
   const related = getProducts()
@@ -101,36 +53,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     // productTheme decides the surface; the class swaps the colour variables
     // that everything below reads from.
     <div className={surface === "dark" ? "theme-dark" : undefined}>
-      {/* No announcement bar here by choice — the page opens on the wordmark.
-          The storefront still shows settings.announcement above its header. */}
-      <header className="brand-bar flex items-center justify-between gap-4 px-6 sm:px-10 py-5">
-        <Link href="/" aria-label={settings.brandName} className="shrink-0">
-          {settings.lockLogo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={settings.lockLogo} alt={settings.brandName} className="h-6 sm:h-8 w-auto" />
-          ) : (
-            <span className="font-script text-2xl">{settings.brandName}</span>
-          )}
-        </Link>
-        {/* Two icons in place of the Shop / About / Instagram links.
-            Neither an account system nor a cart exists in this project, so each
-            points at the nearest real destination rather than sitting dead:
-            the person icon at contact, the bag at the product grid. */}
-        <nav className="flex items-center gap-1 sm:gap-2">
-          <a
-            href={accountHref}
-            {...(accountHref.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-            aria-label={settings.contactEmail ? "Contact us" : "Find us"}
-            title={settings.contactEmail ? "Contact us" : "Find us"}
-            className="icon-btn"
-          >
-            <PersonIcon />
-          </a>
-          <Link href="/#shop" aria-label="Shop all pieces" title="Shop all pieces" className="icon-btn">
-            <BagIcon />
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader settings={settings} />
 
       <main className="px-6 sm:px-10 py-8 sm:py-12">
         <nav
@@ -206,45 +129,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
         )}
       </main>
 
-      {/* Signup band, in the lock screen's gradient so the two read as one brand */}
-      <section id="keep-in-touch" className="brand-gradient px-6 sm:px-10 py-16 sm:py-20 text-black">
-        <div className="max-w-xl mx-auto text-center">
-          <h2 className="font-script text-3xl sm:text-4xl">Never miss a drop</h2>
-          <p className="mt-3 mb-8 text-sm" style={{ color: "rgba(0,0,0,0.7)" }}>
-            Drops are announced by SMS first. No spam, only drops.
-          </p>
-          {/* theme="lock" because this band is the same gradient as the lock
-              screen — the light theme's muted grey is meant for white and goes
-              nearly illegible here. */}
-          <SignupForm compact theme="lock" />
-        </div>
-      </section>
-
-      <footer
-        className="flex flex-col sm:flex-row gap-3 items-center justify-between px-6 sm:px-10 py-8 text-[11px] tracking-[0.2em] uppercase"
-        style={{ color: "var(--muted)" }}
-      >
-        <span>
-          © {new Date().getFullYear()} {settings.brandName}
-        </span>
-        <div className="flex gap-5">
-          {settings.instagram && (
-            <a href={settings.instagram} target="_blank" rel="noreferrer" className="hover:text-accent">
-              Instagram
-            </a>
-          )}
-          {settings.tiktok && (
-            <a href={settings.tiktok} target="_blank" rel="noreferrer" className="hover:text-accent">
-              TikTok
-            </a>
-          )}
-          {settings.contactEmail && (
-            <a href={`mailto:${settings.contactEmail}`} className="hover:text-accent">
-              Contact
-            </a>
-          )}
-        </div>
-      </footer>
+      <SignupBand />
+      <SiteFooter settings={settings} />
     </div>
   );
 }
