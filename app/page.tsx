@@ -76,15 +76,8 @@ export default async function Home() {
 
         {/* Products */}
         <section id="shop" className="px-6 sm:px-10 pb-24">
-          <div className="flex items-baseline justify-between gap-4 mb-8">
-            <h2 className="font-script text-4xl sm:text-5xl lg:text-6xl">Dreams Collection</h2>
-            <span
-              className="font-hand text-[11px] tracking-[0.25em] uppercase shrink-0"
-              style={{ color: "var(--muted)" }}
-            >
-              {products.length} piece{products.length === 1 ? "" : "s"}
-            </span>
-          </div>
+          {/* Heading alone — no piece count beside it. */}
+          <h2 className="font-script text-4xl sm:text-5xl lg:text-6xl mb-8">Dreams Collection</h2>
 
           {products.length === 0 ? (
             <div
